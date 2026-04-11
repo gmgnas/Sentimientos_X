@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Trevelin"
+  query: "Adorni"
   dias_atras: 30
   frecuencia: "semanal"
 
