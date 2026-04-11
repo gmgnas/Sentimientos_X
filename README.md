@@ -9,7 +9,7 @@
 ## 1. Objetivo del Proyecto
 Desarrollar un flujo de datos (Pipeline) automático para monitorear la percepción pública en la red X, con un historial móvil de 30 días y actualizaciones semanales, cumpliendo con la normativa legal argentina.
 
-Componentes de la Arquitectura:
+## 2.Componentes de la Arquitectura:
    
    * Ingesta: Script Python utilizando la API v2 de X.
    
@@ -63,9 +63,9 @@ flowchart TD
     class DB storage
     class D output
 ```
-## 3. Automatización (Orquestación)
+## 3. Automatización
 Se implementó un desacoplamiento mediante config.yaml, permitiendo la reusabilidad del código. La ejecución se gestiona mediante un archivo de procesamiento por lotes (.bat) integrable al programador de tareas del sistema operativo.
-## 4. Marco Legal (Ley 25.326)
+## 4. Marco Legal
 La solución garantiza la privacidad mediante:
 
    * Disociación de datos (eliminación de nombres reales).
