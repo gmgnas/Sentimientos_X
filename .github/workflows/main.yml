@@ -2,37 +2,45 @@ name: Actualizar Dashboard Semanal
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
-  workflow_dispatch:
+    - cron: '0 0 * * 1' # Se ejecuta todos los lunes a las 00:00
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la pestaña Actions
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: # Agregamos permisos explícitos para que el robot pueda escribir
-      contents: write
+    permissions:
+      contents: write # Permiso para que el bot pueda subir el nuevo data.js y la DB
     
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v4 # Actualizado a v4
+        uses: actions/checkout@v4
 
       - name: Configurar Python
-        uses: actions/setup-python@v5 # Actualizado a v5
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12' # Usamos una versión de Python más actual
+          python-version: '3.12'
 
       - name: Instalar dependencias
         run: |
-          pip install pandas plotly pyyaml tweepy nltk
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Instalamos nltk por separado si lo usás para sentimientos
+          pip install nltk 
 
-      - name: Ejecutar Pipeline de Datos
+      - name: Ejecutar Scripts (Ingesta y Visualización)
         env:
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-        run: python src/visualizacion.py
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+        run: |
+          python src/main.py
+          python src/visualizacion.py
 
       - name: Subir cambios al repositorio
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/ docs/
-          git commit -m "Auto: Actualización de datos y dashboard" || echo "No hay cambios para subir"
+          
+          # Agregamos la base de datos y los archivos generados en docs
+          git add data/sentimientos.db docs/data.js docs/lineas.html
+          
+          git commit -m "Auto: Actualización de datos (Artemisa) y dashboard" || echo "No hay cambios para subir"
           git push
