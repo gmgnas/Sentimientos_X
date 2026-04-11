@@ -67,6 +67,9 @@ flowchart TD
 Se implementó un desacoplamiento mediante config.yaml, permitiendo la reusabilidad del código. La ejecución se gestiona mediante un archivo de procesamiento por lotes (.bat) integrable al programador de tareas del sistema operativo.
 ## 4. Marco Legal (Ley 25.326)
 La solución garantiza la privacidad mediante:
+
 •	Disociación de datos (eliminación de nombres reales).
+
 •	Almacenamiento exclusivo de metadatos de opinión.
+
 •	Cumplimiento de la finalidad estadística solicitada por el cliente.
