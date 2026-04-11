@@ -6,8 +6,13 @@
 
 **Alumnos:** Facundo Zubeldia - Gonzalo Martín González Nastovich
 
-## Descripción del Proyecto
-Este sistema realiza una extracción automática de posteos de la red social X, procesa el sentimiento de los mismos y visualiza los resultados en un dashboard interactivo alojado en GitHub Pages.
+## 1. Objetivo del Proyecto
+Desarrollar un flujo de datos (Pipeline) automático para monitorear la percepción pública en la red X, con un historial móvil de 30 días y actualizaciones semanales, cumpliendo con la normativa legal argentina.
+. Componentes de la Arquitectura
+•	Ingesta: Script Python utilizando la API v2 de X.
+•	Procesamiento: Clasificación de sentimientos (Positivo, Neutro, Negativo) mediante modelos de NLP.
+•	Persistencia: Base de datos relacional SQLite para evitar duplicados y mantener integridad.
+•	Visualización: Dashboard interactivo basado en Plotly, desplegado en infraestructura de GitHub Pages.
 
 ##  Arquitectura de la Solución
 ```mermaid
@@ -53,3 +58,10 @@ flowchart TD
     class DB storage
     class D output
 ```
+## 3. Automatización (Orquestación)
+Se implementó un desacoplamiento mediante config.yaml, permitiendo la reusabilidad del código. La ejecución se gestiona mediante un archivo de procesamiento por lotes (.bat) integrable al programador de tareas del sistema operativo.
+## 4. Marco Legal (Ley 25.326)
+La solución garantiza la privacidad mediante:
+•	Disociación de datos (eliminación de nombres reales).
+•	Almacenamiento exclusivo de metadatos de opinión.
+•	Cumplimiento de la finalidad estadística solicitada por el cliente.
