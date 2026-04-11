@@ -9,7 +9,7 @@
 ## 1. Objetivo del Proyecto
 Desarrollar un flujo de datos (Pipeline) automático para monitorear la percepción pública en la red X, con un historial móvil de 30 días y actualizaciones semanales, cumpliendo con la normativa legal argentina.
 
-## 2.Componentes de la Arquitectura:
+## 2. Componentes de la Arquitectura:
    
    * Ingesta: Script Python utilizando la API v2 de X.
    
