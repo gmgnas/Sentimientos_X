@@ -8,11 +8,11 @@
 
 ## 1. Objetivo del Proyecto
 Desarrollar un flujo de datos (Pipeline) automático para monitorear la percepción pública en la red X, con un historial móvil de 30 días y actualizaciones semanales, cumpliendo con la normativa legal argentina.
-. Componentes de la Arquitectura
-Ingesta: Script Python utilizando la API v2 de X.
-Procesamiento: Clasificación de sentimientos (Positivo, Neutro, Negativo) mediante modelos de NLP.
-Persistencia: Base de datos relacional SQLite para evitar duplicados y mantener integridad.
-Visualización: Dashboard interactivo basado en Plotly, desplegado en infraestructura de GitHub Pages.
+# Componentes de la Arquitectura
+    # Ingesta: Script Python utilizando la API v2 de X.
+    # Procesamiento: Clasificación de sentimientos (Positivo, Neutro, Negativo) mediante modelos de NLP.
+    # Persistencia: Base de datos relacional SQLite para evitar duplicados y mantener integridad.
+    # Visualización: Dashboard interactivo basado en Plotly, desplegado en infraestructura de GitHub Pages.
 
 ##  Arquitectura de la Solución
 ```mermaid
