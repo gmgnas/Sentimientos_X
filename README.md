@@ -1,4 +1,4 @@
-[🔗 Clic aquí para ver el Dashboard en vivo](https://gmgnas.github.io/Sentimientos_X/)
+[🔗 Clic aquí para ver el Dashboard](https://gmgnas.github.io/Sentimientos_X/)
 
 # Analisis de Sentimientos de X
 
@@ -73,4 +73,4 @@ La solución garantiza la privacidad mediante:
 
    * Almacenamiento exclusivo de metadatos de opinión.
 
-   * Cumplimiento de la finalidad estadística solicitada por el cliente.
+   * Cumplimiendo la finalidad estadística solicitada por el cliente.
