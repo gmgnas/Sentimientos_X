@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Sentimientos X</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f4f7f9; }
+        .header { background: #1a237e; color: white; padding: 25px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .equipo { font-size: 0.9em; opacity: 0.8; margin-top: 5px; }
+        .container { padding: 20px; max-width: 1200px; margin: auto; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .card { padding: 20px; border-radius: 12px; color: white; text-align: center; }
+        .card span { display: block; font-size: 2.5em; font-weight: bold; margin-top: 5px; }
+        .c-total { background: #2c3e50; }
+        .c-pos { background: #1a237e; } /* Azul Oscuro */
+        .c-neu { background: #9e9e9e; } /* Gris */
+        .c-neg { background: #8b0000; } /* Rojo Oscuro */
+        .chart-box { background: white; padding: 20px; border-radius: 12px; border: 1px solid #ddd; }
+        iframe { width: 100%; height: 450px; border: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Análisis de Sentimientos de X</h1>
+        <p>Materia: Arquitectura de Soluciones<p>Alumnos: Facunndo Zubeldia - Gonzalo Martín González</p>
+    </div>
+   <div class="container">
+        <div class="grid">
+            <div class="card c-total">POST TOTALES <span id="t-tot">0</span></div>
+            <div class="card c-pos">POSITIVOS <span id="t-pos">0</span></div>
+            <div class="card c-neu">NEUTROS <span id="t-neu">0</span></div>
+            <div class="card c-neg">NEGATIVOS <span id="t-neg">0</span></div>
+        </div>
+
+        <div class="chart-box">
+            <h3>📈 Evolución Temporal de Sentimientos</h3>
+            <iframe src="docs/lineas.html"></iframe>
+        </div>
+    </div>
+
+    <script src="docs/data.js"></script>
+    <script>
+        document.getElementById('t-tot').innerText = total;
+        document.getElementById('t-pos').innerText = pos;
+        document.getElementById('t-neu').innerText = neu;
+        document.getElementById('t-neg').innerText = neg;
+    </script>
+</body>
+</html>

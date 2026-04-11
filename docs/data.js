@@ -1,0 +1,1 @@
+const total=120; const pos=23; const neu=11; const neg=86;
