@@ -13,7 +13,7 @@ with open(config_path, 'r', encoding='utf-8') as f:
     config = yaml.safe_load(f)
 
 # Extraer el tema dinámico
-tema_actual = config.get('search_query', 'General')
+tema_actual = config.get('query', 'General')
 
 # Colores desde el config
 color_map = {
