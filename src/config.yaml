@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "#LosPumas"
+  query: "#Artemisa"
   dias_atras: 30
   frecuencia: "semanal"
 
