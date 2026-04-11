@@ -3,24 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Sentimientos X - Artemisa</title>
+    <title>Dashboard Sentimientos X - Arquitectura de Soluciones</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: white; margin: 0; padding: 20px; text-align: center; }
-        .header { background-color: #1a1a1a; padding: 30px; border-radius: 15px; border-bottom: 4px solid #1a237e; margin-bottom: 20px; }
-        h1 { margin: 0; color: #ffffff; }
-        #tema-dinamico { color: #ffca28; margin: 10px 0; font-size: 1.8em; }
-        .materia { font-style: italic; color: #bbb; }
-        .alumnos { margin-top: 10px; font-weight: bold; color: #9e9e9e; }
+        /* Estilos Base del Segundo Código */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            background: #f4f7f9; 
+            color: #333; 
+        }
         
-        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 10px; border-top: 5px solid; }
-        .pos { border-color: #1a237e; }
-        .neu { border-color: #9e9e9e; }
-        .neg { border-color: #8b0000; }
-        .stat-val { font-size: 2.5em; display: block; margin-top: 10px; }
+        /* Encabezado con degradado y sombra */
+        .header { 
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%); 
+            color: white; 
+            padding: 30px 20px; 
+            text-align: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+        }
         
-        .grafico-container { background: #1e1e1e; margin-top: 30px; padding: 20px; border-radius: 15px; }
-        iframe { width: 100%; border: none; border-radius: 10px; }
+        .header h1 { margin: 0; font-size: 2em; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Estilo para el Tema Dinámico (Dorado para resaltar) */
+        #tema-dinamico { 
+            background: rgba(255, 255, 255, 0.1); 
+            display: inline-block; 
+            padding: 5px 20px; 
+            border-radius: 20px; 
+            margin: 15px 0; 
+            font-weight: 400;
+            color: #ffca28; 
+            font-size: 1.5em;
+        }
+
+        .materia { font-size: 1.1em; margin-bottom: 5px; opacity: 0.9; font-style: italic; }
+        .alumnos { font-size: 0.9em; opacity: 0.8; font-weight: bold; }
+
+        .container { padding: 30px; max-width: 1200px; margin: auto; }
+        
+        /* Grilla de Tarjetas con Colores Solicitados */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 20px; 
+            margin-bottom: 30px; 
+        }
+        
+        .card { 
+            padding: 25px; 
+            border-radius: 15px; 
+            color: white; 
+            text-align: center; 
+            transition: transform 0.3s; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card span { display: block; font-size: 2.8em; font-weight: bold; margin-top: 10px; }
+        
+        /* Clases de colores específicas */
+        .c-total { background: #2c3e50; }
+        .c-pos { background: #1a237e; } /* Azul Institucional */
+        .c-neu { background: #757575; } /* Gris */
+        .c-neg { background: #b71c1c; } /* Rojo Oscuro */
+
+        /* Contenedor del Gráfico */
+        .chart-box { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0; 
+        }
+        
+        .chart-box h3 { margin-top: 0; color: #1a237e; border-bottom: 2px solid #f4f7f9; padding-bottom: 10px; }
+        iframe { width: 100%; height: 500px; border: none; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -34,22 +90,25 @@
         <div class="alumnos">Alumnos: Facundo Zubeldia - Gonzalo Martín González</div>
     </div>
 
-    <div class="grid-stats">
-        <div class="card pos">Positivos <span id="val-pos" class="stat-val">0</span></div>
-        <div class="card neu">Neutrales <span id="val-neu" class="stat-val">0</span></div>
-        <div class="card neg">Negativos <span id="val-neg" class="stat-val">0</span></div>
-        <div class="card" style="border-color: #ffffff;">Total <span id="val-total" class="stat-val">0</span></div>
-    </div>
+    <div class="container">
+        <div class="grid">
+            <div class="card c-total">POST TOTALES <span id="val-total">0</span></div>
+            <div class="card c-pos">POSITIVOS <span id="val-pos">0</span></div>
+            <div class="card c-neu">NEUTROS <span id="val-neu">0</span></div>
+            <div class="card c-neg">NEGATIVOS <span id="val-neg">0</span></div>
+        </div>
 
-    <div class="grafico-container">
-        <iframe src="docs/lineas.html?v=1.1" style="height:450px;"></iframe>
+        <div class="chart-box">
+            <h3>📈 Evolución Temporal de Sentimientos</h3>
+            <iframe src="docs/lineas.html?v=1.1"></iframe>
+        </div>
     </div>
 
     <script src="docs/data.js?v=1.1"></script>
     
     <script>
-        // Función para actualizar la UI con los datos de data.js
-        window.onload = function() {
+        // Actualizamos la UI cuando el DOM y el script data.js estén listos
+        document.addEventListener("DOMContentLoaded", function() {
             if (typeof temaActual !== 'undefined') {
                 document.getElementById('tema-dinamico').innerText = "Tema: " + temaActual;
                 document.getElementById('val-pos').innerText = pos;
@@ -57,7 +116,7 @@
                 document.getElementById('val-neg').innerText = neg;
                 document.getElementById('val-total').innerText = total;
             }
-        };
+        });
     </script>
 </body>
 </html>
