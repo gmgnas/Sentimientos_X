@@ -1,3 +1,5 @@
+[🔗 Clic aquí para ver el Dashboard en vivo](https://gmgnas.github.io/Sentimientos_X/)
+
 # Analisis de Sentimientos de X
 
 **Materia:** Arquitectura de Soluciones
