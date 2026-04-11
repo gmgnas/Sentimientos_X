@@ -2,20 +2,23 @@ name: Actualizar Dashboard Semanal
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # Se ejecuta todos los lunes a las 00:00
-  workflow_dispatch: # Permite ejecutarlo manualmente desde la web
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: # Agregamos permisos explícitos para que el robot pueda escribir
+      contents: write
+    
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Actualizado a v4
 
       - name: Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Actualizado a v5
         with:
-          python-version: '3.10'
+          python-version: '3.12' # Usamos una versión de Python más actual
 
       - name: Instalar dependencias
         run: |
@@ -23,13 +26,13 @@ jobs:
 
       - name: Ejecutar Pipeline de Datos
         env:
-          X_API_KEY: ${{ secrets.X_API_KEY }} # Usamos secretos para seguridad
+          X_API_KEY: ${{ secrets.X_API_KEY }}
         run: python src/visualizacion.py
 
       - name: Subir cambios al repositorio
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data/ docs/
-          git commit -m "Auto: Actualización de datos y dashboard" || exit 0
+          git commit -m "Auto: Actualización de datos y dashboard" || echo "No hay cambios para subir"
           git push
