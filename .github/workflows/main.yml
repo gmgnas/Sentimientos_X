@@ -1,0 +1,35 @@
+name: Actualizar Dashboard Semanal
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Se ejecuta todos los lunes a las 00:00
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la web
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias
+        run: |
+          pip install pandas plotly pyyaml tweepy nltk
+
+      - name: Ejecutar Pipeline de Datos
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }} # Usamos secretos para seguridad
+        run: python src/visualizacion.py
+
+      - name: Subir cambios al repositorio
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add data/ docs/
+          git commit -m "Auto: Actualización de datos y dashboard" || exit 0
+          git push
