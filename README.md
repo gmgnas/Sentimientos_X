@@ -11,13 +11,13 @@ Desarrollar un flujo de datos (Pipeline) automático para monitorear la percepci
 
 Componentes de la Arquitectura
    
-    1 Ingesta: Script Python utilizando la API v2 de X.
+   * Ingesta: Script Python utilizando la API v2 de X.
    
-    2 Procesamiento: Clasificación de sentimientos (Positivo, Neutro, Negativo) mediante modelos de NLP.
+   * Procesamiento: Clasificación de sentimientos (Positivo, Neutro, Negativo) mediante modelos de NLP.
    
-    3 Persistencia: Base de datos relacional SQLite para evitar duplicados y mantener integridad.
+   * Persistencia: Base de datos relacional SQLite para evitar duplicados y mantener integridad.
    
-    4 Visualización: Dashboard interactivo basado en Plotly, desplegado en infraestructura de GitHub Pages.
+   * Visualización: Dashboard interactivo basado en Plotly, desplegado en infraestructura de GitHub Pages.
 
 ##  Arquitectura de la Solución
 ```mermaid
