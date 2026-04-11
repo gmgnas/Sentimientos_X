@@ -65,6 +65,7 @@ flowchart TD
 ```
 ## 3. Automatización
 Se implementó un desacoplamiento mediante config.yaml, permitiendo la reusabilidad del código. La ejecución se gestiona mediante un archivo de procesamiento por lotes (.bat) integrable al programador de tareas del sistema operativo.
+
 ## 4. Marco Legal
 La solución garantiza la privacidad mediante:
 
