@@ -2,7 +2,7 @@ import sqlite3
 import yaml
 import os
 import tweepy
-import random
+import pandas as pd
 from datetime import datetime
 
 # 1. Rutas
@@ -10,7 +10,7 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 db_path = os.path.join(base_dir, 'data', 'sentimientos.db')
 config_path = os.path.join(base_dir, 'src', 'config.yaml')
 
-# 2. Leer Configuración y Token
+# 2. Leer Token desde Variable de Entorno y Configuración
 bearer_token = os.getenv('X_BEARER_TOKEN')
 
 with open(config_path, 'r', encoding='utf-8') as file:
@@ -18,40 +18,53 @@ with open(config_path, 'r', encoding='utf-8') as file:
 
 tema = config['analisis']['query']
 
-# 3. Conectar a Base de Datos
+# 3. Conectar y REINICIAR Base de Datos
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
+
+# Limpieza total: Borramos la tabla para que no se acumulen datos viejos
+cursor.execute('DROP TABLE IF EXISTS tweets')
 cursor.execute('''
-    CREATE TABLE IF NOT EXISTS tweets (
+    CREATE TABLE tweets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tema TEXT,
         date TEXT,
         sentimiento TEXT
     )
 ''')
+conn.commit()
 
-# 4. Ingesta desde la API de X
+# 4. Extracción con Tweepy (API v2)
+client = tweepy.Client(bearer_token=bearer_token)
+
 print(f"Buscando posts reales sobre: {tema}...")
+
 try:
-    client = tweepy.Client(bearer_token=bearer_token)
-    query_busqueda = f"{tema} -is:retweet lang:es"
-    tweets = client.search_recent_tweets(query=query_busqueda, max_results=10, tweet_fields=['created_at'])
+    # Buscamos 100 tweets recientes del tema elegido
+    tweets = client.search_recent_tweets(query=f"{tema} -is:retweet lang:es", 
+                                        tweet_fields=['created_at'], 
+                                        max_results=100)
+    
+    lista_tweets = []
+    sentimientos_posibles = ['Positivo', 'Neutral', 'Negativo']
 
     if tweets.data:
-        sentimientos_lista = ['Positivo', 'Neutral', 'Negativo']
         for tweet in tweets.data:
-            fecha = tweet.created_at.strftime('%Y-%m-%d %H:%M:%S')
-            # Simulamos análisis de sentimiento sobre el texto real
-            sent_simulado = random.choices(sentimientos_lista, weights=[0.3, 0.4, 0.3])[0]
-            
-            cursor.execute("INSERT INTO tweets (tema, date, sentimiento) VALUES (?, ?, ?)", 
-                           (tema, fecha, sent_simulado))
-        print(f"✅ Se ingestaron {len(tweets.data)} posts de X.")
+            lista_tweets.append({
+                'tema': tema,
+                'date': tweet.created_at.strftime('%Y-%m-%d'),
+                'sentimiento': random.choice(sentimientos_posibles) # Aquí va tu lógica de análisis real
+            })
+        
+        # Guardar en SQL usando Pandas (Modo replace para doble seguridad)
+        df = pd.DataFrame(lista_tweets)
+        df.to_sql('tweets', conn, if_exists='replace', index=False)
+        print(f"✅ Se guardaron {len(df)} posts nuevos sobre {tema}.")
     else:
-        print("No se encontraron resultados recientes.")
+        print("❌ No se encontraron tweets nuevos.")
 
 except Exception as e:
     print(f"❌ Error API: {e}")
 
-conn.commit()
-conn.close()
+finally:
+    conn.close()

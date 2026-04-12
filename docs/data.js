@@ -1,5 +1,1 @@
-const total = 180;
-const pos = 42;
-const neu = 26;
-const neg = 112;
-const temaActual = 'Maradona';
+const total = 0; const pos = 0; const neu = 0; const neg = 0; const temaActual = 'Maradona';
