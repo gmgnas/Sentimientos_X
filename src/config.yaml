@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "#Trump"
+  query: "Maradona"
   dias_atras: 30
   frecuencia: "semanal"
 
