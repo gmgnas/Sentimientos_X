@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Adorni"
+  query: "Milei"
   dias_atras: 30
   frecuencia: "semanal"
 
