@@ -1,1 +1,1 @@
-const total = 0; const pos = 0; const neu = 0; const neg = 0; const temaActual = 'Maradona';
+const total = 0; const pos = 0; const neu = 0; const neg = 0; const temaActual = '#Maradona';

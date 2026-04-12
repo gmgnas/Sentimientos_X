@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Maradona"
+  query: "#Maradona"
   dias_atras: 30
   frecuencia: "semanal"
 
