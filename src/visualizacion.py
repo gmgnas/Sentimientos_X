@@ -27,8 +27,8 @@ color_map = {
 
 # --- CONFIGURACIÓN DE ESTILO DE ALTO IMPACTO (FONDO NO BLANCO) ---
 layout_estilizado = dict(
-    paper_bgcolor='#f0f2f5',       # Gris azulado muy tenue para el fondo exterior
-    plot_bgcolor='#ffffff',        # Blanco puro solo para el área de trazado (genera contraste)
+    paper_bgcolor="#d7ec16",       # Gris azulado muy tenue para el fondo exterior
+    plot_bgcolor='#d7ec16',        # Blanco puro solo para el área de trazado (genera contraste)
     font=dict(color='#2c3e50', family="Arial", size=12),
     title_font=dict(size=20, family='Arial Black', color='#1a1a1a'),
     margin=dict(l=40, r=40, t=60, b=40)
@@ -64,9 +64,9 @@ else:
 
     fig_col.update_layout(
         **layout_estilizado,
-        width=1000, # Un poco más ancho para evitar amontonamiento
+        width=800, # Un poco más ancho para evitar amontonamiento
         height=500,
-        bargap=0.15,
+        bargap=0.10,
         xaxis={'categoryorder':'array', 'categoryarray': df_agrupado['dia_mes'].unique()}
     )
     
@@ -88,8 +88,8 @@ else:
     
     fig_torta.update_layout(
         **layout_estilizado,
-        width=350,  # Reducido para que sea proporcional al de barras
-        height=450,
+        width=250,  # Reducido para que sea proporcional al de barras
+        height=500,
         showlegend=True,
         legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
     )
