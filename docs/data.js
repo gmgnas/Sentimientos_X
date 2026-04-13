@@ -1,1 +1,1 @@
-const total = 161; const pos = 54; const neu = 56; const neg = 51; const temaActual = 'Trevelin';
+const total = 10; const pos = 3; const neu = 4; const neg = 3; const temaActual = 'Chubut';
