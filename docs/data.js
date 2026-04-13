@@ -1,1 +1,1 @@
-const total = 0; const pos = 0; const neu = 0; const neg = 0; const temaActual = '#Messi';
+const total = 100; const pos = 28; const neu = 27; const neg = 45; const temaActual = 'Argentina';

@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "#Messi"
+  query: "Argentina"
   dias_atras: 30
   frecuencia: "semanal"
 
