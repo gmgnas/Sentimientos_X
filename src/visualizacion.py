@@ -26,40 +26,42 @@ color_map = {
     'Negativo': config['estetica']['neg']
 }
 
-# --- ESTILO DE ALTO IMPACTO ---
+# --- ESTILO BASE ---
 layout_base = dict(
     paper_bgcolor='#f4f7f6',       
     plot_bgcolor='#ffffff',        
-    font=dict(color='#2c3e50', family="Arial", size=11), # Fuente un poco más pequeña para ahorrar espacio
-    title_font=dict(size=18, family='Arial Black', color='#1a1a1a'),
-    margin=dict(l=40, r=20, t=60, b=100) 
+    font=dict(color='#2c3e50', family="Arial", size=11),
+    margin=dict(l=40, r=20, t=60, b=120) 
 )
 
-# 3. Leer y FILTRAR Datos (Corrección: Filtro estricto de tema y fecha)
+# 3. Leer Datos con FILTRO ESTRICTO (Solución al tema anterior)
 conn = sqlite3.connect(db_path)
 fecha_limite = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
 
-# IMPORTANTE: Usamos parámetros (?) para evitar errores con carácteres especiales y filtrar bien el tema
+# Usamos la cláusula WHERE para asegurar que solo traiga el tema actual
 query = "SELECT * FROM tweets WHERE tema = ? AND date >= ?"
 df = pd.read_sql_query(query, conn, params=(tema_actual, fecha_limite))
 conn.close()
 
 if df.empty:
-    print(f"⚠️ No hay datos exclusivos para el tema: {tema_actual}")
+    print(f"⚠️ No hay datos para el tema: '{tema_actual}' en los últimos 30 días.")
 else:
-    # --- PROCESAMIENTO ---
+    # --- PROCESAMIENTO PARA ORDEN CRONOLÓGICO ---
     df['fecha_dt'] = pd.to_datetime(df['date'])
-    # Agrupamos por fecha sin hora para separar las barras por día
-    df['fecha_solo'] = df['fecha_dt'].dt.date
-    df['etiqueta_eje'] = df['fecha_dt'].dt.strftime('%d-%b')
     
-    df = df.sort_values('fecha_dt')
+    # Creamos una columna de solo fecha para agrupar, pero mantenemos el objeto datetime para ordenar
+    df['fecha_agrupadora'] = df['fecha_dt'].dt.normalize()
     
-    # Agrupamos asegurando que el tema no se mezcle
-    df_agrupado = df.groupby(['fecha_solo', 'etiqueta_eje', 'sentimiento']).size().reset_index(name='cantidad')
-    df_agrupado = df_agrupado.sort_values('fecha_solo')
+    # Agrupamos por la fecha real (esto garantiza el orden matemático)
+    df_agrupado = df.groupby(['fecha_agrupadora', 'sentimiento']).size().reset_index(name='cantidad')
+    
+    # Ordenamos el DataFrame explícitamente por fecha
+    df_agrupado = df_agrupado.sort_values('fecha_agrupadora')
+    
+    # Creamos la etiqueta para el eje X DESPUÉS de ordenar
+    df_agrupado['etiqueta_eje'] = df_agrupado['fecha_agrupadora'].dt.strftime('%d-%b')
 
-    # 4. Gráfico de Tendencia (AJUSTE DE ANCHO DINÁMICO)
+    # 4. Gráfico de Tendencia (Corrección de Orden)
     fig_col = px.bar(df_agrupado, 
                       x='etiqueta_eje', 
                       y='cantidad', 
@@ -67,36 +69,30 @@ else:
                       title=f'Análisis Diario: {tema_actual}',
                       color_discrete_map=color_map,
                       barmode='stack',
-                      template="plotly_white")
+                      template="plotly_white",
+                      # Esta línea asegura que Plotly respete el orden del DataFrame
+                      category_orders={"etiqueta_eje": df_agrupado['etiqueta_eje'].unique().tolist()})
 
     fig_col.update_layout(
         **layout_base,
-        autosize=True,      # Permite que el gráfico use el ancho del contenedor HTML
-        height=500,  
-        bargap=0.4,         # Barras más delgadas para que entren los 30 días
+        autosize=True,
+        height=500,
+        bargap=0.4,
         hovermode="x unified",
-        legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=-0.25,
-            xanchor="center",
-            x=0.5,
-            title_text='' 
-        )
+        legend=dict(orientation="h", yanchor="top", y=-0.3, xanchor="center", x=0.5, title_text='')
     )
     
-    # Ajuste de etiquetas para que no se choquen
     fig_col.update_xaxes(
         type='category', 
         tickangle=-45, 
-        tickfont=dict(size=10), # Fuente de fechas más pequeña
+        tickfont=dict(size=10),
         rangeslider_visible=False,
         showgrid=False
     )
     
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 5. Gráfico de Torta (Distribución)
+    # 5. Gráfico de Torta
     df_sent = df['sentimiento'].value_counts().reset_index()
     df_sent.columns = ['sentimiento', 'cantidad']
     
@@ -114,16 +110,10 @@ else:
         legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5)
     )
     
-    fig_torta.update_traces(marker=dict(line=dict(color='#f4f7f6', width=2)))
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 6. Actualizar data.js
-    total = len(df)
-    pos = len(df[df.sentimiento == 'Positivo'])
-    neu = len(df[df.sentimiento == 'Neutral'])
-    neg = len(df[df.sentimiento == 'Negativo'])
-
+    # 6. data.js
     with open(os.path.join(docs_dir, 'data.js'), 'w', encoding='utf-8') as f:
-        f.write(f"const total = {total}; const pos = {pos}; const neu = {neu}; const neg = {neg}; const temaActual = '{tema_actual}';")
+        f.write(f"const total = {len(df)}; const pos = {len(df[df.sentimiento == 'Positivo'])}; const neu = {len(df[df.sentimiento == 'Neutral'])}; const neg = {len(df[df.sentimiento == 'Negativo'])}; const temaActual = '{tema_actual}';")
 
-    print(f"📊 Dashboard filtrado por '{tema_actual}' y ajustado para 30 días.")
+    print(f"📊 Dashboard actualizado y ordenado para '{tema_actual}'.")
