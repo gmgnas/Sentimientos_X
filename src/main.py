@@ -48,7 +48,7 @@ else:
         tweets = client.search_recent_tweets(
             query=f"{tema} -is:retweet", 
             tweet_fields=['created_at'], 
-            max_results=10
+            max_results=100
         )
         
         lista_tweets = []
