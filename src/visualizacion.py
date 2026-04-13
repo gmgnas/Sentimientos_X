@@ -25,13 +25,13 @@ color_map = {
     'Negativo': config['estetica']['neg']
 }
 
-# --- CONFIGURACIÓN DE ESTILO DE ALTO IMPACTO (FONDO NO BLANCO) ---
-layout_estilizado = dict(
-    paper_bgcolor="#d7ec16",       # Gris azulado muy tenue para el fondo exterior
-    plot_bgcolor='#d7ec16',        # Blanco puro solo para el área de trazado (genera contraste)
+# --- ESTILO DE ALTO IMPACTO (FONDO GRIS CLARO E INSTITUCIONAL) ---
+layout_base = dict(
+    paper_bgcolor='#f4f7f6',       # Fondo del recuadro (gris suave)
+    plot_bgcolor='#ffffff',        # Fondo del área de datos (blanco para contraste)
     font=dict(color='#2c3e50', family="Arial", size=12),
     title_font=dict(size=20, family='Arial Black', color='#1a1a1a'),
-    margin=dict(l=40, r=40, t=60, b=40)
+    margin=dict(l=50, r=50, t=80, b=100) # Margen inferior amplio para la leyenda
 )
 
 # 3. Leer y FILTRAR Datos
@@ -46,12 +46,11 @@ else:
     # --- PROCESAMIENTO ---
     df['fecha_dt'] = pd.to_datetime(df['date'])
     df['dia_mes'] = df['fecha_dt'].dt.strftime('%d-%b')
-    
     df = df.sort_values('fecha_dt')
     df_agrupado = df.groupby(['dia_mes', 'sentimiento', 'fecha_dt']).size().reset_index(name='cantidad')
     df_agrupado = df_agrupado.sort_values('fecha_dt')
 
-    # 4. Gráfico de Columnas Segmentadas (SIN BARRA DESLIZANTE)
+    # 4. Gráfico de Columnas (MÁS ANCHO Y LEYENDA ABAJO)
     fig_col = px.bar(df_agrupado, 
                       x='dia_mes', 
                       y='cantidad', 
@@ -60,41 +59,49 @@ else:
                       color_discrete_map=color_map,
                       barmode='stack',
                       template="plotly_white",
-                      labels={'dia_mes': 'Fecha', 'cantidad': 'Cantidad de Posts'})
+                      labels={'dia_mes': 'Fecha', 'cantidad': 'Posts'})
 
     fig_col.update_layout(
-        **layout_estilizado,
-        width=800, # Un poco más ancho para evitar amontonamiento
-        height=500,
-        bargap=0.10,
-        xaxis={'categoryorder':'array', 'categoryarray': df_agrupado['dia_mes'].unique()}
+        **layout_base,
+        width=1100,  # Recuadro más ancho
+        height=550,  # Altura ajustada
+        bargap=0.2,
+        # LEYENDA ABAJO Y CENTRADA
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.2,
+            xanchor="center",
+            x=0.5,
+            title_text='' # Quita el título "sentimiento" para más limpieza
+        )
     )
     
-    # ELIMINAR BARRA DESLIZANTE (Rangeslider)
-    fig_col.update_xaxes(rangeslider_visible=False, type='category', showgrid=False, linecolor='#dcdde1')
-    fig_col.update_yaxes(gridcolor='#ecf0f1', zeroline=False)
+    # Quitar barra deslizante (rangeslider) y pulir ejes
+    fig_col.update_xaxes(rangeslider_visible=False, type='category', showgrid=False)
+    fig_col.update_yaxes(gridcolor='#eeeeee', zeroline=False)
 
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 5. Gráfico de Torta (MÁS PEQUEÑO Y PROPORCIONAL)
+    # 5. Gráfico de Torta (PEQUEÑO Y PROPORCIONAL)
     df_sent = df['sentimiento'].value_counts().reset_index()
     df_sent.columns = ['sentimiento', 'cantidad']
     
     fig_torta = px.pie(df_sent, values='cantidad', names='sentimiento', 
-                      title=f'Distribución Total',
+                      title='Total %',
                       color='sentimiento', 
                       color_discrete_map=color_map, 
                       hole=0.4)
     
     fig_torta.update_layout(
-        **layout_estilizado,
-        width=250,  # Reducido para que sea proporcional al de barras
-        height=500,
+        **layout_base,
+        width=400,   # Recuadro más angosto
+        height=550,  # Misma altura que el de barras para simetría
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
+        legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5)
     )
     
-    fig_torta.update_traces(marker=dict(line=dict(color='#f0f2f5', width=2)))
+    fig_torta.update_traces(marker=dict(line=dict(color='#f4f7f6', width=2)))
 
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
@@ -107,4 +114,4 @@ else:
     with open(os.path.join(docs_dir, 'data.js'), 'w', encoding='utf-8') as f:
         f.write(f"const total = {total}; const pos = {pos}; const neu = {neu}; const neg = {neg}; const temaActual = '{tema_actual}';")
 
-    print(f"📊 Dashboard actualizado para: {tema_actual} ({total} posts procesados).")
+    print(f"📊 Dashboard actualizado para: {tema_actual}")
