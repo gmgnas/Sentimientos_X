@@ -65,7 +65,7 @@ else:
 
     fig_col.update_layout(
         **layout_base,
-        width=1100,  
+        width=900,  
         height=550,  
         bargap=0.2,
         # SOLUCIÓN HOVER: Agrupa los datos para que no se corten a la derecha
