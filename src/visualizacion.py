@@ -30,90 +30,91 @@ color_map = {
 layout_base = dict(
     paper_bgcolor='#f4f7f6',       
     plot_bgcolor='#ffffff',        
-    font=dict(color='#2c3e50', family="Arial", size=12),
-    title_font=dict(size=20, family='Arial Black', color='#1a1a1a'),
-    margin=dict(l=50, r=50, t=80, b=120) # Más margen inferior para la leyenda 30 días
+    font=dict(color='#2c3e50', family="Arial", size=11), # Fuente un poco más pequeña para ahorrar espacio
+    title_font=dict(size=18, family='Arial Black', color='#1a1a1a'),
+    margin=dict(l=40, r=20, t=60, b=100) 
 )
 
-# 3. Leer y FILTRAR Datos
+# 3. Leer y FILTRAR Datos (Corrección: Filtro estricto de tema y fecha)
 conn = sqlite3.connect(db_path)
-# Filtramos por tema y por los últimos 30 días desde hoy
 fecha_limite = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
-query = f"SELECT * FROM tweets WHERE tema = '{tema_actual}' AND date >= '{fecha_limite}'"
-df = pd.read_sql_query(query, conn)
+
+# IMPORTANTE: Usamos parámetros (?) para evitar errores con carácteres especiales y filtrar bien el tema
+query = "SELECT * FROM tweets WHERE tema = ? AND date >= ?"
+df = pd.read_sql_query(query, conn, params=(tema_actual, fecha_limite))
 conn.close()
 
 if df.empty:
-    print(f"❌ No se encontraron datos para '{tema_actual}' en los últimos 30 días.")
+    print(f"⚠️ No hay datos exclusivos para el tema: {tema_actual}")
 else:
     # --- PROCESAMIENTO ---
     df['fecha_dt'] = pd.to_datetime(df['date'])
-    df['dia_mes'] = df['fecha_dt'].dt.strftime('%d-%b')
+    # Agrupamos por fecha sin hora para separar las barras por día
+    df['fecha_solo'] = df['fecha_dt'].dt.date
+    df['etiqueta_eje'] = df['fecha_dt'].dt.strftime('%d-%b')
     
-    # Ordenamos cronológicamente para que el eje X fluya de izquierda a derecha
     df = df.sort_values('fecha_dt')
     
-    df_agrupado = df.groupby(['dia_mes', 'sentimiento', 'fecha_dt']).size().reset_index(name='cantidad')
-    df_agrupado = df_agrupado.sort_values('fecha_dt')
+    # Agrupamos asegurando que el tema no se mezcle
+    df_agrupado = df.groupby(['fecha_solo', 'etiqueta_eje', 'sentimiento']).size().reset_index(name='cantidad')
+    df_agrupado = df_agrupado.sort_values('fecha_solo')
 
-    # 4. Gráfico de Tendencia Temporal (30 DÍAS)
+    # 4. Gráfico de Tendencia (AJUSTE DE ANCHO DINÁMICO)
     fig_col = px.bar(df_agrupado, 
-                      x='dia_mes', 
+                      x='etiqueta_eje', 
                       y='cantidad', 
                       color='sentimiento',
-                      title=f'Tendencia Mensual: {tema_actual}',
+                      title=f'Análisis Diario: {tema_actual}',
                       color_discrete_map=color_map,
                       barmode='stack',
-                      template="plotly_white",
-                      labels={'dia_mes': 'Fecha', 'cantidad': 'Posts'})
+                      template="plotly_white")
 
     fig_col.update_layout(
         **layout_base,
-        width=1100,  
-        height=550,  
-        bargap=0.3, # Barras un poco más finas para que entren 30 sin amontonarse
+        autosize=True,      # Permite que el gráfico use el ancho del contenedor HTML
+        height=500,  
+        bargap=0.4,         # Barras más delgadas para que entren los 30 días
         hovermode="x unified",
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.25, # Bajamos un poco más la leyenda por las etiquetas del eje X
+            y=-0.25,
             xanchor="center",
             x=0.5,
             title_text='' 
         )
     )
     
-    # Ajuste fino del eje X para que no se amontone el texto
+    # Ajuste de etiquetas para que no se choquen
     fig_col.update_xaxes(
-        rangeslider_visible=False, 
         type='category', 
-        tickangle=-45, # Inclinamos las fechas para que se lean bien los 30 días
+        tickangle=-45, 
+        tickfont=dict(size=10), # Fuente de fechas más pequeña
+        rangeslider_visible=False,
         showgrid=False
     )
-    fig_col.update_yaxes(gridcolor='#eeeeee', zeroline=False)
-
+    
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 5. Gráfico de Distribución (TORTA)
+    # 5. Gráfico de Torta (Distribución)
     df_sent = df['sentimiento'].value_counts().reset_index()
     df_sent.columns = ['sentimiento', 'cantidad']
     
     fig_torta = px.pie(df_sent, values='cantidad', names='sentimiento', 
-                      title='Distribución 30 Días',
+                      title=f'Total 30 Días: {tema_actual}',
                       color='sentimiento', 
                       color_discrete_map=color_map, 
                       hole=0.4)
     
     fig_torta.update_layout(
         **layout_base,
-        width=400,   
-        height=550,  
+        autosize=True,
+        height=500,
         showlegend=True,
         legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5)
     )
     
     fig_torta.update_traces(marker=dict(line=dict(color='#f4f7f6', width=2)))
-
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
     # 6. Actualizar data.js
@@ -125,4 +126,4 @@ else:
     with open(os.path.join(docs_dir, 'data.js'), 'w', encoding='utf-8') as f:
         f.write(f"const total = {total}; const pos = {pos}; const neu = {neu}; const neg = {neg}; const temaActual = '{tema_actual}';")
 
-    print(f"📊 Visualización de 30 días generada para: {tema_actual}")
+    print(f"📊 Dashboard filtrado por '{tema_actual}' y ajustado para 30 días.")
