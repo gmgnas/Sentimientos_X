@@ -1,1 +1,1 @@
-const total = 2; const pos = 0; const neu = 1; const neg = 1; const temaActual = 'Futalaufquen';
+const total = 13; const pos = 5; const neu = 2; const neg = 6; const temaActual = 'Futaleufu';
