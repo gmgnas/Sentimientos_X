@@ -63,7 +63,7 @@ else:
 
     fig_col.update_layout(
         **layout_base,
-        width=1100,  # Recuadro más ancho para evitar scroll horizontal
+        width=900,  # Recuadro más ancho para evitar scroll horizontal
         height=550,  # Altura suficiente para eliminar scroll vertical
         bargap=0.2,
         # RÓTULO DE DATOS (LEYENDA) ABAJO Y CENTRADO
