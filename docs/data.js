@@ -1,1 +1,1 @@
-const total = 100; const pos = 29; const neu = 36; const neg = 35; const temaActual = 'Messi';
+const total = 98; const pos = 34; const neu = 30; const neg = 34; const temaActual = 'Messi';
