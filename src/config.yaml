@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Futalaufquen"
+  query: "Futaleufu"
   dias_atras: 30
   frecuencia: "semanal"
 
