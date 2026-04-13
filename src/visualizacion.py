@@ -93,7 +93,7 @@ else:
     df_sent.columns = ['sentimiento', 'cantidad']
     
     fig_torta = px.pie(df_sent, values='cantidad', names='sentimiento', 
-                      title=f'Total 30 Días: {tema_actual}',
+                      title=f'Proporción %: {tema_actual}',
                       color='sentimiento', 
                       color_discrete_map=color_map, 
                       hole=0.4)
