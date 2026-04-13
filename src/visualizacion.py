@@ -25,13 +25,14 @@ color_map = {
     'Negativo': config['estetica']['neg']
 }
 
-# --- ESTILO DE ALTO IMPACTO (FONDO GRIS CLARO E INSTITUCIONAL) ---
+# --- ESTILO DE ALTO IMPACTO ---
+# Usamos un gris muy suave para el fondo del papel para resaltar sobre el blanco del index
 layout_base = dict(
-    paper_bgcolor='#f4f7f6',       # Fondo del recuadro (gris suave)
-    plot_bgcolor='#ffffff',        # Fondo del área de datos (blanco para contraste)
+    paper_bgcolor='#f4f7f6',       
+    plot_bgcolor='#ffffff',        
     font=dict(color='#2c3e50', family="Arial", size=12),
     title_font=dict(size=20, family='Arial Black', color='#1a1a1a'),
-    margin=dict(l=50, r=50, t=80, b=100) # Margen inferior amplio para la leyenda
+    margin=dict(l=50, r=50, t=80, b=100) 
 )
 
 # 3. Leer y FILTRAR Datos
@@ -47,10 +48,11 @@ else:
     df['fecha_dt'] = pd.to_datetime(df['date'])
     df['dia_mes'] = df['fecha_dt'].dt.strftime('%d-%b')
     df = df.sort_values('fecha_dt')
+    
     df_agrupado = df.groupby(['dia_mes', 'sentimiento', 'fecha_dt']).size().reset_index(name='cantidad')
     df_agrupado = df_agrupado.sort_values('fecha_dt')
 
-    # 4. Gráfico de Tendencia Temporal (MÁS ANCHO Y LEYENDA ABAJO)
+    # 4. Gráfico de Tendencia Temporal (ANCHO Y HOVER UNIFICADO)
     fig_col = px.bar(df_agrupado, 
                       x='dia_mes', 
                       y='cantidad', 
@@ -63,10 +65,16 @@ else:
 
     fig_col.update_layout(
         **layout_base,
-        width=900,  # Recuadro más ancho para evitar scroll horizontal
-        height=550,  # Altura suficiente para eliminar scroll vertical
+        width=1100,  
+        height=550,  
         bargap=0.2,
-        # RÓTULO DE DATOS (LEYENDA) ABAJO Y CENTRADO
+        # SOLUCIÓN HOVER: Agrupa los datos para que no se corten a la derecha
+        hovermode="x unified",
+        hoverlabel=dict(
+            bgcolor="rgba(255, 255, 255, 0.9)",
+            font_size=13,
+            font_family="Arial"
+        ),
         legend=dict(
             orientation="h",
             yanchor="top",
@@ -77,13 +85,13 @@ else:
         )
     )
     
-    # Quitar barra deslizante (rangeslider) para limpiar la visualización
+    # Limpieza total de ejes y eliminación de scrollbars
     fig_col.update_xaxes(rangeslider_visible=False, type='category', showgrid=False)
     fig_col.update_yaxes(gridcolor='#eeeeee', zeroline=False)
 
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 5. Gráfico de Distribución de Sentimientos (TORTA)
+    # 5. Gráfico de Distribución (TORTA)
     df_sent = df['sentimiento'].value_counts().reset_index()
     df_sent.columns = ['sentimiento', 'cantidad']
     
@@ -95,17 +103,21 @@ else:
     
     fig_torta.update_layout(
         **layout_base,
-        width=400,   # Recuadro más angosto y proporcional
-        height=550,  # Misma altura que el de barras para simetría
+        width=400,   
+        height=550,  
         showlegend=True,
         legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5)
     )
     
-    fig_torta.update_traces(marker=dict(line=dict(color='#f4f7f6', width=2)))
+    fig_torta.update_traces(
+        textposition='inside', 
+        textinfo='percent',
+        marker=dict(line=dict(color='#f4f7f6', width=2))
+    )
 
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 6. Actualizar data.js (Para los contadores superiores)
+    # 6. Actualizar data.js
     total = len(df)
     pos = len(df[df.sentimiento == 'Positivo'])
     neu = len(df[df.sentimiento == 'Neutral'])
@@ -114,4 +126,4 @@ else:
     with open(os.path.join(docs_dir, 'data.js'), 'w', encoding='utf-8') as f:
         f.write(f"const total = {total}; const pos = {pos}; const neu = {neu}; const neg = {neg}; const temaActual = '{tema_actual}';")
 
-    print(f"📊 Dashboard actualizado para: {tema_actual}")
+    print(f"📊 Dashboard actualizado correctamente para: {tema_actual}")
