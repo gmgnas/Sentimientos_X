@@ -1,1 +1,1 @@
-const total = 22; const pos = 10; const neu = 5; const neg = 7; const temaActual = 'Trevelin';
+const total = 11; const pos = 5; const neu = 3; const neg = 3; const temaActual = 'Chagas';
