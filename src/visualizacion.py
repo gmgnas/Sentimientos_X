@@ -50,7 +50,7 @@ else:
     df_agrupado = df.groupby(['dia_mes', 'sentimiento', 'fecha_dt']).size().reset_index(name='cantidad')
     df_agrupado = df_agrupado.sort_values('fecha_dt')
 
-    # 4. Gráfico de Columnas (MÁS ANCHO Y LEYENDA ABAJO)
+    # 4. Gráfico de Tendencia Temporal (MÁS ANCHO Y LEYENDA ABAJO)
     fig_col = px.bar(df_agrupado, 
                       x='dia_mes', 
                       y='cantidad', 
@@ -63,27 +63,27 @@ else:
 
     fig_col.update_layout(
         **layout_base,
-        width=1100,  # Recuadro más ancho
-        height=550,  # Altura ajustada
+        width=1100,  # Recuadro más ancho para evitar scroll horizontal
+        height=550,  # Altura suficiente para eliminar scroll vertical
         bargap=0.2,
-        # LEYENDA ABAJO Y CENTRADA
+        # RÓTULO DE DATOS (LEYENDA) ABAJO Y CENTRADO
         legend=dict(
             orientation="h",
             yanchor="top",
             y=-0.2,
             xanchor="center",
             x=0.5,
-            title_text='' # Quita el título "sentimiento" para más limpieza
+            title_text='' 
         )
     )
     
-    # Quitar barra deslizante (rangeslider) y pulir ejes
+    # Quitar barra deslizante (rangeslider) para limpiar la visualización
     fig_col.update_xaxes(rangeslider_visible=False, type='category', showgrid=False)
     fig_col.update_yaxes(gridcolor='#eeeeee', zeroline=False)
 
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 5. Gráfico de Torta (PEQUEÑO Y PROPORCIONAL)
+    # 5. Gráfico de Distribución de Sentimientos (TORTA)
     df_sent = df['sentimiento'].value_counts().reset_index()
     df_sent.columns = ['sentimiento', 'cantidad']
     
@@ -95,7 +95,7 @@ else:
     
     fig_torta.update_layout(
         **layout_base,
-        width=400,   # Recuadro más angosto
+        width=400,   # Recuadro más angosto y proporcional
         height=550,  # Misma altura que el de barras para simetría
         showlegend=True,
         legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5)
@@ -105,7 +105,7 @@ else:
 
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 6. Actualizar data.js
+    # 6. Actualizar data.js (Para los contadores superiores)
     total = len(df)
     pos = len(df[df.sentimiento == 'Positivo'])
     neu = len(df[df.sentimiento == 'Neutral'])
