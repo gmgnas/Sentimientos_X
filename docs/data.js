@@ -1,1 +1,1 @@
-const total = 100; const pos = 38; const neu = 27; const neg = 35; const temaActual = 'Argentina';
+const total = 11; const pos = 5; const neu = 2; const neg = 4; const temaActual = 'Trevelin';

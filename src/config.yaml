@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Futbol"
+  query: "Trevelin"
   dias_atras: 30
   frecuencia: "semanal"
 
