@@ -23,8 +23,8 @@ tema = config['analisis']['query']
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
-# IMPORTANTE: Ya no hacemos DROP TABLE. Creamos la tabla si no existe.
-# Agregamos 'tweet_id' como UNIQUE para no guardar dos veces el mismo post.
+# IMPORTANTE: Creamos la tabla si no existe para acumular datos históricos.
+# 'tweet_id' es UNIQUE para evitar duplicar posts si corres el script varias veces.
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS tweets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,11 +44,11 @@ else:
         client = tweepy.Client(bearer_token=bearer_token)
         print(f"Buscando posts sobre: {tema}...")
         
-        # Buscamos los 100 más recientes
+        # Buscamos los 100 más recientes (Límite de la API gratuita)
         tweets = client.search_recent_tweets(
             query=f"{tema} -is:retweet", 
             tweet_fields=['created_at'], 
-            max_results=100
+            max_results=10
         )
         
         lista_tweets = []
@@ -60,27 +60,27 @@ else:
                     'tema': tema,
                     'date': tweet.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                     'sentimiento': random.choice(sentimientos_posibles),
-                    'tweet_id': str(tweet.id) # Guardamos el ID real para evitar duplicados
+                    'tweet_id': str(tweet.id) 
                 })
             
-            # Convertimos a DataFrame
+            # Convertimos a DataFrame para procesar
             df_nuevos = pd.DataFrame(lista_tweets)
             
-            # Guardamos los datos nuevos. 
-            # Usamos un bucle para insertar uno por uno y que el 'UNIQUE' ignore los repetidos.
+            # Insertamos uno a uno para que el error de duplicado (UNIQUE) sea manejado
             exitos = 0
             for _, row in df_nuevos.iterrows():
                 try:
                     row.to_frame().T.to_sql('tweets', conn, if_exists='append', index=False)
                     exitos += 1
                 except:
-                    # Si el tweet_id ya existe, salta aquí y no hace nada (evita duplicados)
+                    # Si el tweet_id ya existe en la DB, simplemente lo ignora
                     continue
             
             print(f"✅ ¡Proceso completado! Se agregaron {exitos} posts nuevos sobre {tema}.")
             
-            # Verificación de cuántos días hay en total
-            cursor.execute("SELECT COUNT(DISTINCT date(date)) FROM tweets")
+            # --- CORRECCIÓN DEL CONTEO DE DÍAS ---
+            # Usamos substr(date, 1, 10) para tomar solo YYYY-MM-DD e ignorar la hora
+            cursor.execute("SELECT COUNT(DISTINCT substr(date, 1, 10)) FROM tweets")
             dias_acumulados = cursor.fetchone()[0]
             print(f"📈 Tu base de datos ahora tiene historial de {dias_acumulados} días distintos.")
 
