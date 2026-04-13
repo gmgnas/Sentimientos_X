@@ -25,10 +25,10 @@ color_map = {
     'Negativo': config['estetica']['neg']
 }
 
-# --- CONFIGURACIÓN DE ESTILO DE ALTO IMPACTO ---
+# --- CONFIGURACIÓN DE ESTILO DE ALTO IMPACTO (FONDO NO BLANCO) ---
 layout_estilizado = dict(
-    paper_bgcolor='rgba(0,0,0,0)', # Transparente para fundirse con la web
-    plot_bgcolor='#f8f9fa',       # Fondo gris muy tenue y limpio
+    paper_bgcolor='#f0f2f5',       # Gris azulado muy tenue para el fondo exterior
+    plot_bgcolor='#ffffff',        # Blanco puro solo para el área de trazado (genera contraste)
     font=dict(color='#2c3e50', family="Arial", size=12),
     title_font=dict(size=20, family='Arial Black', color='#1a1a1a'),
     margin=dict(l=40, r=40, t=60, b=40)
@@ -51,7 +51,7 @@ else:
     df_agrupado = df.groupby(['dia_mes', 'sentimiento', 'fecha_dt']).size().reset_index(name='cantidad')
     df_agrupado = df_agrupado.sort_values('fecha_dt')
 
-    # 4. Gráfico de Columnas Segmentadas (ANCHO Y PROPORCIONAL)
+    # 4. Gráfico de Columnas Segmentadas (SIN BARRA DESLIZANTE)
     fig_col = px.bar(df_agrupado, 
                       x='dia_mes', 
                       y='cantidad', 
@@ -64,18 +64,19 @@ else:
 
     fig_col.update_layout(
         **layout_estilizado,
-        width=900,  # Mayor ancho para impacto visual
+        width=1000, # Un poco más ancho para evitar amontonamiento
         height=500,
-        bargap=0.15
+        bargap=0.15,
+        xaxis={'categoryorder':'array', 'categoryarray': df_agrupado['dia_mes'].unique()}
     )
     
-    # Pulido de ejes
-    fig_col.update_xaxes(type='category', showgrid=False, linecolor='#dcdde1')
+    # ELIMINAR BARRA DESLIZANTE (Rangeslider)
+    fig_col.update_xaxes(rangeslider_visible=False, type='category', showgrid=False, linecolor='#dcdde1')
     fig_col.update_yaxes(gridcolor='#ecf0f1', zeroline=False)
 
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
 
-    # 5. Gráfico de Torta (ANGOSTO Y MINIMALISTA)
+    # 5. Gráfico de Torta (MÁS PEQUEÑO Y PROPORCIONAL)
     df_sent = df['sentimiento'].value_counts().reset_index()
     df_sent.columns = ['sentimiento', 'cantidad']
     
@@ -87,13 +88,13 @@ else:
     
     fig_torta.update_layout(
         **layout_estilizado,
-        width=400,  # Más angosto
+        width=350,  # Reducido para que sea proporcional al de barras
         height=450,
-        showlegend=True
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
     )
     
-    # Separación elegante entre porciones
-    fig_torta.update_traces(marker=dict(line=dict(color='#FFFFFF', width=2)))
+    fig_torta.update_traces(marker=dict(line=dict(color='#f0f2f5', width=2)))
 
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
