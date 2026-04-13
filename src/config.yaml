@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Tecka"
+  query: "Messi"
   dias_atras: 30
   frecuencia: "semanal"
 
