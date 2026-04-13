@@ -1,1 +1,1 @@
-const total = 17; const pos = 3; const neu = 7; const neg = 7; const temaActual = 'Chubut';
+const total = 19; const pos = 4; const neu = 7; const neg = 8; const temaActual = 'Chubut';
