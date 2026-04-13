@@ -38,8 +38,8 @@ if not df.empty:
 
     # 3. Gráfico de Tendencia
     fig_col = px.bar(df_agrupado, 
-                      x='dia_mes', 
-                      y='cantidad', 
+                      x='Dia', 
+                      y='Posts', 
                       color='sentimiento',
                       title=f'Evolución Diaria: {tema_actual}',
                       color_discrete_map=color_map,
