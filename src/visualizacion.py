@@ -3,6 +3,7 @@ import sqlite3
 import plotly.express as px
 import os
 import yaml
+from datetime import datetime, timedelta
 
 # 1. Rutas
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,38 +27,41 @@ color_map = {
 }
 
 # --- ESTILO DE ALTO IMPACTO ---
-# Usamos un gris muy suave para el fondo del papel para resaltar sobre el blanco del index
 layout_base = dict(
     paper_bgcolor='#f4f7f6',       
     plot_bgcolor='#ffffff',        
     font=dict(color='#2c3e50', family="Arial", size=12),
     title_font=dict(size=20, family='Arial Black', color='#1a1a1a'),
-    margin=dict(l=50, r=50, t=80, b=100) 
+    margin=dict(l=50, r=50, t=80, b=120) # Más margen inferior para la leyenda 30 días
 )
 
 # 3. Leer y FILTRAR Datos
 conn = sqlite3.connect(db_path)
-query = f"SELECT * FROM tweets WHERE tema = '{tema_actual}'"
+# Filtramos por tema y por los últimos 30 días desde hoy
+fecha_limite = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+query = f"SELECT * FROM tweets WHERE tema = '{tema_actual}' AND date >= '{fecha_limite}'"
 df = pd.read_sql_query(query, conn)
 conn.close()
 
 if df.empty:
-    print(f"❌ No hay datos para el tema: {tema_actual}")
+    print(f"❌ No se encontraron datos para '{tema_actual}' en los últimos 30 días.")
 else:
     # --- PROCESAMIENTO ---
     df['fecha_dt'] = pd.to_datetime(df['date'])
     df['dia_mes'] = df['fecha_dt'].dt.strftime('%d-%b')
+    
+    # Ordenamos cronológicamente para que el eje X fluya de izquierda a derecha
     df = df.sort_values('fecha_dt')
     
     df_agrupado = df.groupby(['dia_mes', 'sentimiento', 'fecha_dt']).size().reset_index(name='cantidad')
     df_agrupado = df_agrupado.sort_values('fecha_dt')
 
-    # 4. Gráfico de Tendencia Temporal (ANCHO Y HOVER UNIFICADO)
+    # 4. Gráfico de Tendencia Temporal (30 DÍAS)
     fig_col = px.bar(df_agrupado, 
                       x='dia_mes', 
                       y='cantidad', 
                       color='sentimiento',
-                      title=f'Evolución Diaria: {tema_actual}',
+                      title=f'Tendencia Mensual: {tema_actual}',
                       color_discrete_map=color_map,
                       barmode='stack',
                       template="plotly_white",
@@ -65,28 +69,27 @@ else:
 
     fig_col.update_layout(
         **layout_base,
-        width=900,  
+        width=1100,  
         height=550,  
-        bargap=0.2,
-        # SOLUCIÓN HOVER: Agrupa los datos para que no se corten a la derecha
+        bargap=0.3, # Barras un poco más finas para que entren 30 sin amontonarse
         hovermode="x unified",
-        hoverlabel=dict(
-            bgcolor="rgba(255, 255, 255, 0.9)",
-            font_size=13,
-            font_family="Arial"
-        ),
         legend=dict(
             orientation="h",
             yanchor="top",
-            y=-0.2,
+            y=-0.25, # Bajamos un poco más la leyenda por las etiquetas del eje X
             xanchor="center",
             x=0.5,
             title_text='' 
         )
     )
     
-    # Limpieza total de ejes y eliminación de scrollbars
-    fig_col.update_xaxes(rangeslider_visible=False, type='category', showgrid=False)
+    # Ajuste fino del eje X para que no se amontone el texto
+    fig_col.update_xaxes(
+        rangeslider_visible=False, 
+        type='category', 
+        tickangle=-45, # Inclinamos las fechas para que se lean bien los 30 días
+        showgrid=False
+    )
     fig_col.update_yaxes(gridcolor='#eeeeee', zeroline=False)
 
     fig_col.write_html(os.path.join(docs_dir, 'lineas.html'), full_html=False, include_plotlyjs='cdn')
@@ -96,7 +99,7 @@ else:
     df_sent.columns = ['sentimiento', 'cantidad']
     
     fig_torta = px.pie(df_sent, values='cantidad', names='sentimiento', 
-                      title='Total %',
+                      title='Distribución 30 Días',
                       color='sentimiento', 
                       color_discrete_map=color_map, 
                       hole=0.4)
@@ -109,11 +112,7 @@ else:
         legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5)
     )
     
-    fig_torta.update_traces(
-        textposition='inside', 
-        textinfo='percent',
-        marker=dict(line=dict(color='#f4f7f6', width=2))
-    )
+    fig_torta.update_traces(marker=dict(line=dict(color='#f4f7f6', width=2)))
 
     fig_torta.write_html(os.path.join(docs_dir, 'torta.html'), full_html=False, include_plotlyjs='cdn')
 
@@ -126,4 +125,4 @@ else:
     with open(os.path.join(docs_dir, 'data.js'), 'w', encoding='utf-8') as f:
         f.write(f"const total = {total}; const pos = {pos}; const neu = {neu}; const neg = {neg}; const temaActual = '{tema_actual}';")
 
-    print(f"📊 Dashboard actualizado correctamente para: {tema_actual}")
+    print(f"📊 Visualización de 30 días generada para: {tema_actual}")
