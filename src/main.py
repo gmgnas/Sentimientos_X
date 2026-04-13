@@ -19,16 +19,19 @@ with open(config_path, 'r', encoding='utf-8') as file:
 
 tema = config['analisis']['query']
 
-# 3. Conectar y Reiniciar Base de Datos
+# 3. Conectar y Configurar Base de Datos (Persistente)
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
-cursor.execute('DROP TABLE IF EXISTS tweets')
+
+# IMPORTANTE: Ya no hacemos DROP TABLE. Creamos la tabla si no existe.
+# Agregamos 'tweet_id' como UNIQUE para no guardar dos veces el mismo post.
 cursor.execute('''
-    CREATE TABLE tweets (
+    CREATE TABLE IF NOT EXISTS tweets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tema TEXT,
         date TEXT,
-        sentimiento TEXT
+        sentimiento TEXT,
+        tweet_id TEXT UNIQUE
     )
 ''')
 conn.commit()
@@ -41,7 +44,7 @@ else:
         client = tweepy.Client(bearer_token=bearer_token)
         print(f"Buscando posts sobre: {tema}...")
         
-        # Subimos a 100 resultados (Máximo del plan gratuito)
+        # Buscamos los 100 más recientes
         tweets = client.search_recent_tweets(
             query=f"{tema} -is:retweet", 
             tweet_fields=['created_at'], 
@@ -55,16 +58,34 @@ else:
             for tweet in tweets.data:
                 lista_tweets.append({
                     'tema': tema,
-                    # Guardamos la fecha completa, la limpiaremos en la visualización
                     'date': tweet.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                    'sentimiento': random.choice(sentimientos_posibles)
+                    'sentimiento': random.choice(sentimientos_posibles),
+                    'tweet_id': str(tweet.id) # Guardamos el ID real para evitar duplicados
                 })
             
-            df = pd.DataFrame(lista_tweets)
-            df.to_sql('tweets', conn, if_exists='replace', index=False)
-            print(f"✅ ¡Éxito! Se guardaron {len(df)} posts sobre {tema}.")
+            # Convertimos a DataFrame
+            df_nuevos = pd.DataFrame(lista_tweets)
+            
+            # Guardamos los datos nuevos. 
+            # Usamos un bucle para insertar uno por uno y que el 'UNIQUE' ignore los repetidos.
+            exitos = 0
+            for _, row in df_nuevos.iterrows():
+                try:
+                    row.to_frame().T.to_sql('tweets', conn, if_exists='append', index=False)
+                    exitos += 1
+                except:
+                    # Si el tweet_id ya existe, salta aquí y no hace nada (evita duplicados)
+                    continue
+            
+            print(f"✅ ¡Proceso completado! Se agregaron {exitos} posts nuevos sobre {tema}.")
+            
+            # Verificación de cuántos días hay en total
+            cursor.execute("SELECT COUNT(DISTINCT date(date)) FROM tweets")
+            dias_acumulados = cursor.fetchone()[0]
+            print(f"📈 Tu base de datos ahora tiene historial de {dias_acumulados} días distintos.")
+
         else:
-            print("❓ La API no devolvió nada.")
+            print("❓ La API no devolvió nada nuevo.")
 
     except Exception as e:
         print(f"❌ Error de API: {e}")
