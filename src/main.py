@@ -43,7 +43,7 @@ try:
     # Buscamos 100 tweets recientes del tema elegido
     tweets = client.search_recent_tweets(query=f"{tema} -is:retweet lang:es", 
                                         tweet_fields=['created_at'], 
-                                        max_results=1000
+                                        max_results=1000)
     
     lista_tweets = []
     sentimientos_posibles = ['Positivo', 'Neutral', 'Negativo']
