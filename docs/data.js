@@ -1,1 +1,1 @@
-const total = 13; const pos = 5; const neu = 2; const neg = 6; const temaActual = 'Futaleufu';
+const total = 5; const pos = 2; const neu = 1; const neg = 2; const temaActual = 'Tecka';
