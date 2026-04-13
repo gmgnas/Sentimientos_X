@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento de Arquitectura de Solución - Sentimientos_X</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #2980b9;
+            --accent: #16a085;
+            --bg: #f4f7f6;
+            --white: #ffffff;
+            --legal: #fff9e6;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+        h1 { color: var(--primary); margin: 0; font-size: 2.2em; }
+        h2 { color: var(--secondary); border-left: 6px solid var(--secondary); padding-left: 15px; margin-top: 40px; }
+        h3 { color: var(--accent); margin-top: 25px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        
+        .card {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; }
+        th, td { padding: 15px; text-align: left; border: 1px solid #e0e0e0; }
+        th { background-color: var(--primary); color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        .legal-section {
+            background-color: var(--legal);
+            border: 2px solid #ffeeba;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .mermaid-box {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 25px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            line-height: 1.4;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            background: var(--secondary);
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Arquitectura de Solución: Sentimientos_X</h1>
+            <p><strong>Documento Maestro Unificado para el Cliente</strong></p>
+            <span class="badge">Versión 1.0 - Argentina</span>
+        </header>
+
+        <section id="introduccion">
+            <h2>1. Definición de la Solución</h2>
+            <p>Este proyecto implementa un sistema de <strong>Social Listening</strong> automatizado. La solución permite al cliente monitorizar temas, usuarios o URLs en la red social X, procesar la carga emocional (sentimientos) y visualizar resultados en un dashboard interactivo en tiempo real.</p>
+            <div class="card">
+                <strong>Valor de Negocio:</strong> Automatización total del análisis de reputación digital sin intervención manual en el código, facilitando la toma de decisiones estratégicas.
+            </div>
+        </section>
+
+        <section id="recursos">
+            <h2>2. Gestión de Recursos Integrales</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Humanos</h3>
+                    <ul>
+                        <li>Arquitecto de Soluciones</li>
+                        <li>Data Engineer</li>
+                        <li>Analista NLP</li>
+                        <li>Especialista en Compliance</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Tecnológicos</h3>
+                    <ul>
+                        <li>Python 3.10+ / Tweepy</li>
+                        <li>SQLite (Persistencia)</li>
+                        <li>Plotly Express (Dash)</li>
+                        <li>GitHub (CI/CD)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="arquitectura">
+            <h2>3. Arquitectura de Software y Seguridad</h2>
+            <p>Se utiliza un patrón de <strong>Pipeline Desacoplado</strong>. La lógica de extracción es independiente de la visualización, permitiendo mantenibilidad y escalabilidad.</p>
+            
+            <h3>Diagrama de Flujo (Lógica Mermaid)</h3>
+            <div class="mermaid-box">
+graph TD
+    A[config.yaml] --> B[extraccion.py]
+    B --> C{API X v2}
+    C --> B
+    B --> D[NLP Engine]
+    D --> E[(sentimientos.db)]
+    E --> F[visualizacion.py]
+    F --> G[Dashboard HTML]
+            </div>
+
+            <div class="card" style="border-top: 4px solid #e74c3c;">
+                <h3>Protocolo de Seguridad</h3>
+                <ul>
+                    <li><strong>Secretos:</strong> Uso de <code>.env</code> para ocultar tokens de API.</li>
+                    <li><strong>Deduplicación:</strong> Restricción <code>UNIQUE(tweet_id)</code> en SQL para evitar inflar métricas.</li>
+                    <li><strong>Git:</strong> Uso estricto de <code>.gitignore</code> para proteger credenciales.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="legal">
+            <div class="legal-section">
+                <h2>4. Marco Legal y Ético (Argentina)</h2>
+                <p>El proyecto opera bajo el estricto cumplimiento de la <strong>Ley Nacional 25.326 de Protección de Datos Personales</strong>.</p>
+                <ul>
+                    <li><strong>Anonimización:</strong> Los reportes finales no muestran datos que permitan la re-identificación de ciudadanos.</li>
+                    <li><strong>API Oficial:</strong> Se garantiza que no se realiza <i>scraping</i>, utilizando los canales autorizados por X Corp.</li>
+                    <li><strong>Fines Estadísticos:</strong> Los datos se procesan con el fin único de análisis de tendencias públicas.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="presupuesto">
+            <h2>5. Presupuesto y Plan Financiero</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Naturaleza</th>
+                        <th>Inversión (USD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Desarrollo de Arquitectura y Pipeline</td>
+                        <td>CAPEX (Pago único)</td>
+                        <td>$ 2.425,00</td>
+                    </tr>
+                    <tr>
+                        <td>Suscripción API de X (Basic Tier)</td>
+                        <td>OPEX (Mensual)</td>
+                        <td>$ 100,00</td>
+                    </tr>
+                    <tr>
+                        <td>Infraestructura Cloud / Hosting</td>
+                        <td>OPEX (Mensual)</td>
+                        <td>$ 15,00</td>
+                    </tr>
+                    <tr>
+                        <td>Mantenimiento y Soporte (5h/mes)</td>
+                        <td>OPEX (Mensual)</td>
+                        <td>$ 150,00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="soporte">
+            <h2>6. Pruebas y Mantenimiento</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Ciclo de QA</h3>
+                    <p>Pruebas de estrés de API, validación de integridad SQL y tests unitarios del motor de sentimientos.</p>
+                </div>
+                <div class="card">
+                    <h3>Mantenimiento</h3>
+                    <p>Backups semanales, actualización de librerías y ajuste trimestral de diccionarios NLP regionales.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Generado para el Repositorio GitHub: <strong>Sentimientos_X</strong></p>
+            <p>&copy; 2026 Arquitectura de Soluciones de Datos</p>
+        </footer>
+    </div>
+</body>
+</html>
