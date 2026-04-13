@@ -1,6 +1,6 @@
 # Configuración del Análisis
 analisis:
-  query: "Chubut"
+  query: "Trevelin"
   dias_atras: 30
   frecuencia: "semanal"
 
