@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquitectura de Solución - Sentimientos_X | Visualización Profesional</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'base',
+            themeVariables: {
+                // Colores corporativos con alto contraste
+                'background': '#ffffff',
+                'primaryColor': '#1e40af',
+                'primaryBorderColor': '#fbbf24',
+                'primaryTextColor': '#ffffff',
+                'lineColor': '#1e293b',
+                'secondaryColor': '#f59e0b',
+                'tertiaryColor': '#fef3c7',
+                'clusterBkg': '#f8fafc',
+                'clusterBorder': '#cbd5e1',
+                'nodeBorder': '#0f172a',
+                'nodeTextColor': '#0f172a',
+                'fontFamily': 'Inter, Segoe UI, system-ui, sans-serif',
+                'fontSize': '16px',
+                'labelBackground': '#ffffff',
+                'edgeLabelBackground': '#ffffff',
+                'titleColor': '#1e293b'
+            },
+            securityLevel: 'loose',
+            flowchart: { 
+                useMaxWidth: false, 
+                htmlLabels: true, 
+                curve: 'basis',
+                nodeSpacing: 70,
+                rankSpacing: 80
+            },
+            sequence: { useMaxWidth: false }
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-deep: #0f172a;
+            --primary-dark: #1e293b;
+            --primary: #1a237e;
+            --secondary: #0d47a1;
+            --accent-gold: #fbbf24;
+            --accent-gold-dark: #f59e0b;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --bg-soft: #f1f5f9;
+            --white: #ffffff;
+            --border-light: #e2e8f0;
+            --success: #10b981;
+            --info: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            color: var(--text-main);
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            margin: 0;
+            display: flex;
+        }
+
+        nav {
+            width: 300px;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            padding: 2rem 1.5rem;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+            z-index: 10;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        nav h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffca28, #fbbf24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.3px;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+            padding-bottom: 0.75rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0.5rem 0;
+        }
+
+        nav ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 202, 40, 0.12);
+            color: #ffca28;
+            transform: translateX(4px);
+        }
+
+        main {
+            margin-left: 300px;
+            padding: 2rem 2.5rem;
+            width: calc(100% - 300px);
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.2s;
+            border: 1px solid var(--border-light);
+        }
+
+        header {
+            border-bottom: none;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #ffca28, #fbbf24);
+            color: #1e293b;
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            display: inline-block;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary-deep);
+            border-left: 6px solid var(--accent-gold);
+            padding-left: 1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 1.7rem;
+        }
+
+        h3 {
+            color: var(--primary-dark);
+            margin-top: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        tr:hover {
+            background: #fafcff;
+        }
+
+        /* Diagram containers - Mejorados para mayor contraste */
+        .diagram-box {
+            background: linear-gradient(145deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 28px;
+            padding: 2rem 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .diagram-box .mermaid {
+            width: 100%;
+            min-width: 900px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        /* Estilos específicos para asegurar contraste y tamaño de fuente */
+        .mermaid .label {
+            font-family: 'Inter', 'Segoe UI', sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            fill: #0f172a !important;
+        }
+        
+        .mermaid .node rect, 
+        .mermaid .node circle,
+        .mermaid .node polygon {
+            stroke-width: 2px !important;
+        }
+        
+        .mermaid .edgeLabel {
+            background-color: #ffffff !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            padding: 4px 8px !important;
+            border-radius: 12px !important;
+        }
+
+        .mermaid svg {
+            width: 100%;
+            height: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        ul, .text-list {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.8rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 2rem;
+        }
+        
+        /* Mejora de contraste en texto de diagramas */
+        .diagram-box {
+            background: #fefefe;
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                width: 260px;
+            }
+            main {
+                margin-left: 260px;
+                padding: 1.5rem;
+                width: calc(100% - 260px);
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .diagram-box .mermaid {
+                min-width: 700px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h2>📊 Sentimientos_X</h2>
+    <ul>
+        <li><a href="#def">🎯 1. Definición Arquitectura</a></li>
+        <li><a href="#rec">⚙️ 2. Recursos Técnicos</a></li>
+        <li><a href="#seg">🔒 3. Seguridad & Compliance</a></li>
+        <li><a href="#soft">🏗️ 4. Arquitectura Software</a></li>
+        <li><a href="#flujo">🔄 5. Diagrama de Flujo</a></li>
+        <li><a href="#patrones">🧩 6. Patrones de Diseño</a></li>
+        <li><a href="#gestion">📌 7. Gestión de Recursos</a></li>
+        <li><a href="#qa">✅ 8. Plan de Pruebas (QA)</a></li>
+        <li><a href="#mant">🛠️ 9. Plan Mantenimiento</a></li>
+        <li><a href="#presupuesto">💰 10. Presupuesto</a></li>
+    </ul>
+</nav>
+
+<main>
+    <div class="container">
+        <div class="card">
+            <header>
+                <h1>Documento de Arquitectura de Solución</h1>
+                <p style="font-size: 1.1rem; margin-top: 0.5rem;"><strong>Sistema: Sentimientos_X</strong> · <span class="badge">Versión 2.0</span></p>
+                <p style="color: #475569; margin-top: 0.75rem;">Arquitectura desacoplada, escalable y preparada para análisis de sentimiento en tiempo real sobre datos de X (Twitter).</p>
+            </header>
+        </div>
+
+        <div class="card" id="def">
+            <h2>1. Definición de la Arquitectura</h2>
+            <p>La solución implementa una arquitectura <strong>basada en eventos y microservicios ligeros</strong> con un <strong>pipeline de datos asíncrono</strong>. La extracción, procesamiento NLP, almacenamiento y visualización están desacoplados, permitiendo cambiar el foco de análisis (temas, cuentas o hashtags) modificando únicamente el archivo <code>config.yaml</code>. Este enfoque garantiza adaptabilidad, resiliencia y facilidad de mantenimiento, con un núcleo central en SQLite optimizado para retención de 30 días.</p>
+        </div>
+
+        <div class="card" id="rec">
+            <h2>2. Recursos Disponibles</h2>
+            <ul>
+                <li><strong>Hardware:</strong> Servidor Cloud con 2 vCPU, 4GB RAM (escalable) o estación de trabajo local (Python 3.10+).</li>
+                <li><strong>Software Base:</strong> Ubuntu 22.04 LTS / Windows 11 + WSL2, entornos virtuales Python.</li>
+                <li><strong>Conectividad:</strong> API v2 de X (Bearer Token, nivel Essential o Basic).</li>
+                <li><strong>Almacenamiento:</strong> SQLite con cifrado opcional + backups automáticos.</li>
+                <li><strong>Orquestación:</strong> Cron jobs o GitHub Actions para ejecución programada.</li>
+            </ul>
+        </div>
+
+        <div class="card" id="seg">
+            <h2>3. Seguridad y Privacidad</h2>
+            <p>Estrategia de cumplimiento y protección de datos alineada con estándares internacionales y <strong>Ley 25.326 (Argentina)</strong>.</p>
+            <ul>
+                <li><strong>Credenciales seguras:</strong> Gestión mediante variables de entorno + Vault local (Hashicorp Vault simplificado).</li>
+                <li><strong>Anonimización:</strong> Eliminación de metadatos personales antes del análisis, almacenando solo ID del post y sentimiento agregado.</li>
+                <li><strong>Auditoría:</strong> Logs cifrados de acceso a datos y registros de operaciones críticas.</li>
+                <li><strong>Retención limitada:</strong> Política de purga automática para datos > 30 días.</li>
+            </ul>
+        </div>
+
+        <div class="card" id="soft">
+            <h2>4. Arquitectura de Software</h2>
+            <p>Diseño multicapa basado en principios SOLID y desacoplamiento de responsabilidades.</p>
+            <table>
+                <thead><tr><th>Capa</th><th>Tecnología</th><th>Responsabilidad</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Orquestación</strong></td><td>Python + Schedule / Celery</td><td>Gestión de tareas periódicas y ejecución coordinada</td></tr>
+                    <tr><td><strong>Ingesta (Extractor)</strong></td><td>Tweepy / Requests</td><td>Consumo de endpoints de búsqueda reciente y user_timeline</td></tr>
+                    <tr><td><strong>NLP & Sentimiento</strong></td><td>TextBlob / VADER + modelo custom</td><td>Clasificación positiva, negativa, neutral y puntuación de polaridad</td></tr>
+                    <tr><td><strong>Persistencia</strong></td><td>SQLite + SQLAlchemy ORM</td><td>Tablas optimizadas con índices y triggers de limpieza</td></tr>
+                    <tr><td><strong>Visualización</strong></td><td>Plotly + Dash (HTML interactivo)</td><td>Dashboard ejecutivo con filtros temporales y KPIs</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- DIAGRAMA DE FLUJO - CONTRASTE MEJORADO Y FUENTES MÁS GRANDES -->
+        <div class="card" id="flujo">
+            <h2>5. Diagrama de Flujo del Sistema (Pipeline Inteligente)</h2>
+            <div class="diagram-box">
+                <div class="mermaid">
+                    %%{init: {'theme':'base', 'themeVariables': {
+                      'primaryColor': '#1e40af',
+                      'primaryBorderColor': '#fbbf24',
+                      'primaryTextColor': '#ffffff',
+                      'lineColor': '#1e293b',
+                      'secondaryColor': '#f59e0b',
+                      'tertiaryColor': '#fef3c7',
+                      'clusterBkg': '#f8fafc',
+                      'nodeBorder': '#0f172a',
+                      'nodeTextColor': '#0f172a',
+                      'fontSize': '18px',
+                      'fontFamily': 'Inter, Segoe UI, sans-serif'
+                    }}}%%
+                    flowchart TD
+                        Start([🚀 INICIO: config.yaml]) --> Validate{🔍 VALIDACIÓN<br/>de parámetros}
+                        Validate -- Error --> ErrorHandler[⚠️ LOG ERROR + NOTIFICACIÓN]
+                        Validate -- OK --> Fetch[📡 EXTRACCIÓN API X<br/>v2 recent search]
+                        Fetch --> DuplicateCheck{🔄 ¿EXISTE EN BD?<br/>Verificación hash}
+                        DuplicateCheck -- Sí --> Skip[⏩ Omitir duplicado]
+                        DuplicateCheck -- No --> NLP[🧠 MOTOR NLP<br/>Análisis de sentimiento]
+                        NLP --> Classify{📊 CLASIFICACIÓN}
+                        Classify --> Positive[😊 POSITIVO + score]
+                        Classify --> Neutral[😐 NEUTRAL]
+                        Classify --> Negative[😞 NEGATIVO + score]
+                        Positive --> Store[(💾 BASE DE DATOS<br/>SQLite)]
+                        Neutral --> Store
+                        Negative --> Store
+                        Store --> CleanPolicy[🧹 POLÍTICA RETENCIÓN<br/>eliminar +30 días]
+                        CleanPolicy --> Dashboard[📈 GENERAR DASHBOARD<br/>Plotly + HTML ejecutivo]
+                        Dashboard --> Publish[🌐 PUBLICAR REPORTE]
+                        Publish --> End([✅ FIN CICLO])
+                        Skip --> End
+                        ErrorHandler --> End
+                        
+                        style Start fill:#1e40af,stroke:#fbbf24,stroke-width:3px,color:#ffffff,font-weight:bold,font-size:16px
+                        style Validate fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f,font-weight:bold
+                        style Fetch fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a,font-weight:bold
+                        style NLP fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,font-weight:bold
+                        style Classify fill:#fce7f3,stroke:#db2777,stroke-width:2px,font-weight:bold
+                        style Positive fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#065f46
+                        style Neutral fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#374151
+                        style Negative fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b
+                        style Store fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,font-weight:bold
+                        style Dashboard fill:#ffedd5,stroke:#ea580c,stroke-width:3px,font-weight:bold
+                        style Publish fill:#ccfbf1,stroke:#0d9488,stroke-width:2px,font-weight:bold
+                        style End fill:#334155,stroke:#94a3b8,stroke-width:2px,color:#ffffff,font-weight:bold
+                        style Skip fill:#e2e8f0,stroke:#64748b,stroke-width:2px,color:#1e293b
+                        style ErrorHandler fill:#fecaca,stroke:#dc2626,stroke-width:2px,color:#991b1b,font-weight:bold
+                </div>
+            </div>
+            <p style="margin-top: 0.75rem; font-size: 0.9rem; text-align: center; color: #475569; font-weight: 500;">* Diagrama de flujo detallado con rutas de error, deduplicación y generación de insights. Colores de alto contraste por dominio funcional.</p>
+        </div>
+
+        <div class="card" id="patrones">
+            <h2>6. Patrones de Diseño Aplicados</h2>
+            <ul>
+                <li><strong>Singleton (Database Pool):</strong> Control de conexión única a <code>sentimientos.db</code> para evitar race conditions.</li>
+                <li><strong>Adapter (API Wrapper):</strong> Adaptador entre respuestas crudas de X y objetos de dominio homogéneos.</li>
+                <li><strong>Observer (Pipeline Notifications):</strong> Disparadores automáticos para actualizar dashboards cuando se ingieren nuevos datos.</li>
+                <li><strong>Strategy (Visualización):</strong> Permite cambiar entre gráficos de barras, líneas temporales o nubes de palabras sin modificar lógica central.</li>
+            </ul>
+        </div>
+
+        <div class="card" id="gestion">
+            <h2>7. Gestión de Recursos del Proyecto</h2>
+            <table>
+                <thead><tr><th>Recurso</th><th>Impacto</th><th>Crítico para...</th></tr></thead>
+                <tbody>
+                    <tr><td>Humano (Arquitecto + Data Engineer)</td><td>Alto</td><td>Diseño robusto, interpretación de métricas y evolución del sistema.</td></tr>
+                    <tr><td>Material (Infraestructura Cloud)</td><td>Medio</td><td>Ejecución 24/7, disponibilidad del dashboard.</td></tr>
+                    <tr><td>Tecnológico (API X, librerías NLP)</td><td>Muy Alto</td><td>Automatización, calidad del análisis de sentimiento.</td></tr>
+                    <tr><td>Legal y Normativo</td><td>Crítico</td><td>Cumplimiento Ley 25.326 y protección de datos del cliente.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card" id="qa">
+            <h2>8. Plan de Pruebas (QA Estratégico)</h2>
+            <ul>
+                <li><strong>Pruebas Unitarias (pytest):</strong> Validación de función de polaridad, conexión mockeada a API y lógica de deduplicación.</li>
+                <li><strong>Pruebas de Integración:</strong> End-to-end desde extracción hasta escritura en SQLite y generación del dashboard HTML.</li>
+                <li><strong>Pruebas de Rendimiento:</strong> Simulación de rate limits (450 requests cada 15 min) y volumen de 10k tweets.</li>
+                <li><strong>Pruebas de Regresión:</strong> Ejecución en entorno CI/CD cada vez que se modifica el pipeline.</li>
+            </ul>
+        </div>
+
+        <!-- DIAGRAMA DE MANTENIMIENTO - MEJOR CONTRASTE Y FUENTES MÁS GRANDES -->
+        <div class="card" id="mant">
+            <h2>9. Plan de Mantenimiento y Ciclo de Vida</h2>
+            <div class="diagram-box">
+                <div class="mermaid">
+                    %%{init: {'theme':'base', 'themeVariables': {
+                      'primaryColor': '#0f3b5f',
+                      'primaryBorderColor': '#fbbf24',
+                      'primaryTextColor': '#ffffff',
+                      'lineColor': '#1e293b',
+                      'secondaryColor': '#38bdf8',
+                      'tertiaryColor': '#f0f9ff',
+                      'clusterBkg': '#f8fafc',
+                      'nodeBorder': '#0f172a',
+                      'nodeTextColor': '#0f172a',
+                      'fontSize': '17px',
+                      'fontFamily': 'Inter, Segoe UI, sans-serif'
+                    }}}%%
+                    stateDiagram-v2
+                        [*] --> Desarrollo_Iterativo : DEFINICIÓN REQUERIMIENTOS
+                        Desarrollo_Iterativo --> Pruebas_QA : COMMIT & CI/CD
+                        Pruebas_QA --> Entorno_Staging : VALIDACIÓN PIPELINE
+                        Entorno_Staging --> Producción : APROBACIÓN CALIDAD
+                        Producción --> Monitoreo_Activo : EJECUCIÓN DIARIA
+                        Monitoreo_Activo --> Mantenimiento_Correctivo : FALLO / API CHANGE
+                        Mantenimiento_Correctivo --> Desarrollo_Iterativo : HOTFIX
+                        Monitoreo_Activo --> Mantenimiento_Evolutivo : MEJORAS NLP / FEATURES
+                        Mantenimiento_Evolutivo --> Desarrollo_Iterativo : SPRINT EVOLUTIVO
+                        Monitoreo_Activo --> Mantenimiento_Preventivo : BACKUP / LIMPIEZA BD
+                        Mantenimiento_Preventivo --> Producción : TAREAS PROGRAMADAS
+                        
+                        note right of Producción : AUDITORÍA MENSUAL<br/>ACTUALIZACIÓN DEPENDENCIAS
+                        note left of Mantenimiento_Evolutivo : NUEVOS MODELOS<br/>SENTIMIENTO (BERT)
+                        
+                        classDef dev fill:#1e40af,color:#fff,stroke:#fbbf24,stroke-width:2px
+                        classDef qa fill:#059669,color:#fff,stroke:#fbbf24,stroke-width:2px
+                        classDef prod fill:#7c3aed,color:#fff,stroke:#fbbf24,stroke-width:2px
+                        classDef maint fill:#ea580c,color:#fff,stroke:#fbbf24,stroke-width:2px
+                        class Desarrollo_Iterativo dev
+                        class Pruebas_QA,Entorno_Staging qa
+                        class Producción,Monitoreo_Activo prod
+                        class Mantenimiento_Correctivo,Mantenimiento_Evolutivo,Mantenimiento_Preventivo maint
+                </div>
+            </div>
+            <p style="margin-top: 0.5rem; font-style: italic; font-weight: 500;">El plan integra corrección proactiva, evolución continua y tareas preventivas para garantizar disponibilidad del 99%.</p>
+            <ul style="margin-top: 1rem;">
+                <li><strong>Correctivo:</strong> SLA de respuesta < 4h ante fallos críticos (API changes).</li>
+                <li><strong>Evolutivo:</strong> Release trimestral con mejoras en el motor de análisis (multilenguaje).</li>
+                <li><strong>Preventivo:</strong> Vaciamiento de logs, backups diarios de sentimientos.db, renovación de tokens.</li>
+            </ul>
+        </div>
+
+        <div class="card" id="presupuesto">
+            <h2>10. Presupuesto Detallado (CAPEX + OPEX)</h2>
+            <h3>💰 Inversión Inicial (CAPEX)</h3>
+            <table>
+                <thead><tr><th>Perfil / Rol</th><th>Responsabilidad Clave</th><th>Inversión (USD)</th></tr></thead>
+                <tbody>
+                    <tr><td>Arquitecto de Soluciones</td><td>Diseño de pipeline, seguridad, diagramas UML, documentación técnica</td><td>$850</td></tr>
+                    <tr><td>Data Engineer Senior</td><td>Implementación de extracción, optimización SQL, orquestación</td><td>$950</td></tr>
+                    <tr><td>NLP Specialist / Data Scientist</td><td>Modelos de sentimiento, ajuste de polaridad, dashboards analíticos</td><td>$700</td></tr>
+                    <tr><td>Especialista Legal & Compliance</td><td>Auditoría Ley 25.326, términos de uso, cláusulas de privacidad</td><td>$280</td></tr>
+                    <tr style="background:#fef3c7; font-weight:bold;"><td colspan="2">Total Inversión Inicial</td><td>$2,780 USD</td></tr>
+                </tbody>
+            </table>
+            <h3>📆 Costos Operativos Mensuales (OPEX)</h3>
+            <ul>
+                <li>API X (Basic Plan - 500k tweets/mes): <strong>$100 USD</strong></li>
+                <li>Servidor Cloud (DigitalOcean/Linode 4GB RAM + 80GB SSD): <strong>$24 USD</strong></li>
+                <li>Monitoreo y Soporte Técnico (incluye actualizaciones de seguridad): <strong>$180 USD</strong></li>
+                <li>Backup externo + almacenamiento de dashboards históricos: <strong>$12 USD</strong></li>
+                <li><strong>Total OPEX mensual estimado: $316 USD</strong> (primer año con descuentos promocionales desde $280).</li>
+            </ul>
+            <p style="margin-top: 1rem; background: #fefce8; padding: 0.75rem; border-radius: 16px; border-left: 5px solid #fbbf24;"><strong>Nota financiera:</strong> Se recomienda reserva del 15% para contingencias por cambios en políticas de X o actualizaciones regulatorias.</p>
+        </div>
+
+        <div class="footer">
+            <p>Documento de Arquitectura de Solución — <strong>Sentimientos_X</strong> | Pipeline Inteligente con NLP y Dashboard Ejecutivo</p>
+            <p>© 2026 · Soluciones de Análisis de Datos · Cumplimiento Ley 25.326 · Argentina</p>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
