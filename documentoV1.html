@@ -3,40 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arquitectura de Solución - Sentimientos_X | Visualización Profesional</title>
+    <title>Arquitectura de Solución - Sentimientos_X | Documento Profesional</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script>
         mermaid.initialize({ 
             startOnLoad: true, 
             theme: 'base',
             themeVariables: {
-                // Colores corporativos con alto contraste
                 'background': '#ffffff',
-                'primaryColor': '#1e40af',
-                'primaryBorderColor': '#fbbf24',
-                'primaryTextColor': '#ffffff',
-                'lineColor': '#1e293b',
-                'secondaryColor': '#f59e0b',
-                'tertiaryColor': '#fef3c7',
+                'primaryColor': '#1a237e',
+                'primaryBorderColor': '#0d47a1',
+                'primaryTextColor': '#1e293b',
+                'lineColor': '#334155',
+                'secondaryColor': '#ffca28',
+                'tertiaryColor': '#eef2ff',
                 'clusterBkg': '#f8fafc',
-                'clusterBorder': '#cbd5e1',
-                'nodeBorder': '#0f172a',
-                'nodeTextColor': '#0f172a',
-                'fontFamily': 'Inter, Segoe UI, system-ui, sans-serif',
-                'fontSize': '16px',
-                'labelBackground': '#ffffff',
-                'edgeLabelBackground': '#ffffff',
-                'titleColor': '#1e293b'
+                'nodeBorder': '#1e3a8a',
+                'nodeTextColor': '#0f172a'
             },
             securityLevel: 'loose',
-            flowchart: { 
-                useMaxWidth: false, 
-                htmlLabels: true, 
-                curve: 'basis',
-                nodeSpacing: 70,
-                rankSpacing: 80
-            },
-            sequence: { useMaxWidth: false }
+            flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+            sequence: { useMaxWidth: true }
         });
     </script>
     <style>
@@ -71,6 +58,7 @@
             display: flex;
         }
 
+        /* Sidebar mejorada */
         nav {
             width: 300px;
             background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
@@ -123,6 +111,7 @@
             transform: translateX(4px);
         }
 
+        /* Main content */
         main {
             margin-left: 300px;
             padding: 2rem 2.5rem;
@@ -131,7 +120,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -189,6 +178,7 @@
             font-size: 1.25rem;
         }
 
+        /* Tablas modernas */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -215,14 +205,14 @@
             background: #fafcff;
         }
 
-        /* Diagram containers - Mejorados para mayor contraste */
+        /* Diagram boxes - ampliados y profesionales */
         .diagram-box {
             background: linear-gradient(145deg, #ffffff 0%, #fefefe 100%);
-            border: 1px solid #e2e8f0;
+            border: 1px solid #eef2ff;
             border-radius: 28px;
-            padding: 2rem 1.5rem;
+            padding: 1.8rem 1.2rem;
             margin: 2rem 0;
-            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.08);
             transition: all 0.2s;
             overflow-x: auto;
             display: flex;
@@ -232,37 +222,16 @@
 
         .diagram-box .mermaid {
             width: 100%;
-            min-width: 900px;
-            font-size: 18px;
+            min-width: 780px;
+            font-size: 16px;
             font-weight: 500;
         }
-        
-        /* Estilos específicos para asegurar contraste y tamaño de fuente */
-        .mermaid .label {
-            font-family: 'Inter', 'Segoe UI', sans-serif !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
-            fill: #0f172a !important;
-        }
-        
-        .mermaid .node rect, 
-        .mermaid .node circle,
-        .mermaid .node polygon {
-            stroke-width: 2px !important;
-        }
-        
-        .mermaid .edgeLabel {
-            background-color: #ffffff !important;
-            font-size: 14px !important;
-            font-weight: 600 !important;
-            padding: 4px 8px !important;
-            border-radius: 12px !important;
-        }
 
+        /* Estilos específicos para diagramas grandes */
         .mermaid svg {
             width: 100%;
             height: auto;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -282,11 +251,6 @@
             border-top: 1px solid #e2e8f0;
             padding-top: 2rem;
         }
-        
-        /* Mejora de contraste en texto de diagramas */
-        .diagram-box {
-            background: #fefefe;
-        }
 
         @media (max-width: 900px) {
             nav {
@@ -299,9 +263,6 @@
             }
             .card {
                 padding: 1.5rem;
-            }
-            .diagram-box .mermaid {
-                min-width: 700px;
             }
         }
     </style>
@@ -329,7 +290,7 @@
         <div class="card">
             <header>
                 <h1>Documento de Arquitectura de Solución</h1>
-                <p style="font-size: 1.1rem; margin-top: 0.5rem;"><strong>Sistema: Sentimientos_X</strong> · <span class="badge">Versión 2.0</span></p>
+                <p style="font-size: 1.1rem; margin-top: 0.5rem;"><strong>Sistema: Sentimientos_X</strong> · <span class="badge">Versión 2.0 · Pipeline Inteligente</span></p>
                 <p style="color: #475569; margin-top: 0.75rem;">Arquitectura desacoplada, escalable y preparada para análisis de sentimiento en tiempo real sobre datos de X (Twitter).</p>
             </header>
         </div>
@@ -376,62 +337,52 @@
             </table>
         </div>
 
-        <!-- DIAGRAMA DE FLUJO - CONTRASTE MEJORADO Y FUENTES MÁS GRANDES -->
+        <!-- DIAGRAMA DE FLUJO MEJORADO: GRANDE + COLORES PROFESIONALES -->
         <div class="card" id="flujo">
             <h2>5. Diagrama de Flujo del Sistema (Pipeline Inteligente)</h2>
             <div class="diagram-box">
                 <div class="mermaid">
                     %%{init: {'theme':'base', 'themeVariables': {
-                      'primaryColor': '#1e40af',
-                      'primaryBorderColor': '#fbbf24',
-                      'primaryTextColor': '#ffffff',
-                      'lineColor': '#1e293b',
-                      'secondaryColor': '#f59e0b',
-                      'tertiaryColor': '#fef3c7',
-                      'clusterBkg': '#f8fafc',
-                      'nodeBorder': '#0f172a',
-                      'nodeTextColor': '#0f172a',
-                      'fontSize': '18px',
-                      'fontFamily': 'Inter, Segoe UI, sans-serif'
+                      'primaryColor': '#1e3a8a','primaryBorderColor': '#fbbf24','primaryTextColor':'#ffffff',
+                      'lineColor':'#334155','secondaryColor':'#f59e0b','tertiaryColor':'#f1f5f9',
+                      'clusterBkg':'#fefce8','nodeBorder':'#0f172a','nodeTextColor':'#0f172a'
                     }}}%%
                     flowchart TD
-                        Start([🚀 INICIO: config.yaml]) --> Validate{🔍 VALIDACIÓN<br/>de parámetros}
-                        Validate -- Error --> ErrorHandler[⚠️ LOG ERROR + NOTIFICACIÓN]
-                        Validate -- OK --> Fetch[📡 EXTRACCIÓN API X<br/>v2 recent search]
-                        Fetch --> DuplicateCheck{🔄 ¿EXISTE EN BD?<br/>Verificación hash}
+                        Start([🚀 Inicio: config.yaml]) --> Validate{🔍 Validación de<br/>parámetros y credenciales}
+                        Validate -- Error --> ErrorHandler[⚠️ Log de error + notificación]
+                        Validate -- OK --> Fetch[📡 Extracción desde API X<br/>v2 recent search]
+                        Fetch --> DuplicateCheck{🔄 Existe en BD?<br/>Verificación hash}
                         DuplicateCheck -- Sí --> Skip[⏩ Omitir duplicado]
-                        DuplicateCheck -- No --> NLP[🧠 MOTOR NLP<br/>Análisis de sentimiento]
-                        NLP --> Classify{📊 CLASIFICACIÓN}
-                        Classify --> Positive[😊 POSITIVO + score]
-                        Classify --> Neutral[😐 NEUTRAL]
-                        Classify --> Negative[😞 NEGATIVO + score]
-                        Positive --> Store[(💾 BASE DE DATOS<br/>SQLite)]
+                        DuplicateCheck -- No --> NLP[🧠 Motor NLP<br/>Análisis de sentimiento]
+                        NLP --> Classify{📊 Clasificación}
+                        Classify --> Positive[😊 Positivo + score]
+                        Classify --> Neutral[😐 Neutral]
+                        Classify --> Negative[😞 Negativo + score]
+                        Positive --> Store[(💾 Base de Datos SQLite<br/>tabla sentimientos)]
                         Neutral --> Store
                         Negative --> Store
-                        Store --> CleanPolicy[🧹 POLÍTICA RETENCIÓN<br/>eliminar +30 días]
-                        CleanPolicy --> Dashboard[📈 GENERAR DASHBOARD<br/>Plotly + HTML ejecutivo]
-                        Dashboard --> Publish[🌐 PUBLICAR REPORTE]
-                        Publish --> End([✅ FIN CICLO])
+                        Store --> CleanPolicy[🧹 Política de retención:<br/>eliminar registros +30 días]
+                        CleanPolicy --> Dashboard[📈 Generar Dashboard Dinámico<br/>Plotly + HTML ejecutivo]
+                        Dashboard --> Publish[🌐 Publicar reporte / email]
+                        Publish --> End([✅ Fin ciclo])
                         Skip --> End
                         ErrorHandler --> End
                         
-                        style Start fill:#1e40af,stroke:#fbbf24,stroke-width:3px,color:#ffffff,font-weight:bold,font-size:16px
-                        style Validate fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f,font-weight:bold
-                        style Fetch fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a,font-weight:bold
-                        style NLP fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,font-weight:bold
-                        style Classify fill:#fce7f3,stroke:#db2777,stroke-width:2px,font-weight:bold
-                        style Positive fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#065f46
-                        style Neutral fill:#f3f4f6,stroke:#6b7280,stroke-width:2px,color:#374151
-                        style Negative fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b
-                        style Store fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,font-weight:bold
-                        style Dashboard fill:#ffedd5,stroke:#ea580c,stroke-width:3px,font-weight:bold
-                        style Publish fill:#ccfbf1,stroke:#0d9488,stroke-width:2px,font-weight:bold
-                        style End fill:#334155,stroke:#94a3b8,stroke-width:2px,color:#ffffff,font-weight:bold
-                        style Skip fill:#e2e8f0,stroke:#64748b,stroke-width:2px,color:#1e293b
-                        style ErrorHandler fill:#fecaca,stroke:#dc2626,stroke-width:2px,color:#991b1b,font-weight:bold
+                        style Start fill:#1e3a8a,stroke:#fbbf24,stroke-width:3px,color:#ffffff,font-weight:bold
+                        style Validate fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+                        style Fetch fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
+                        style NLP fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px
+                        style Classify fill:#fce7f3,stroke:#db2777,stroke-width:2px
+                        style Positive fill:#d1fae5,stroke:#10b981,stroke-width:2px
+                        style Neutral fill:#f3f4f6,stroke:#6b7280,stroke-width:2px
+                        style Negative fill:#fee2e2,stroke:#ef4444,stroke-width:2px
+                        style Store fill:#ede9fe,stroke:#7c3aed,stroke-width:2px
+                        style Dashboard fill:#ffedd5,stroke:#ea580c,stroke-width:3px
+                        style Publish fill:#ccfbf1,stroke:#0d9488,stroke-width:2px
+                        style End fill:#334155,stroke:#94a3b8,stroke-width:2px,color:#ffffff
                 </div>
             </div>
-            <p style="margin-top: 0.75rem; font-size: 0.9rem; text-align: center; color: #475569; font-weight: 500;">* Diagrama de flujo detallado con rutas de error, deduplicación y generación de insights. Colores de alto contraste por dominio funcional.</p>
+            <p style="margin-top: 0.75rem; font-size: 0.85rem; text-align: center; color: #475569;">* Diagrama de flujo detallado con rutas de error, deduplicación y generación de insights. Colores por dominio funcional.</p>
         </div>
 
         <div class="card" id="patrones">
@@ -467,51 +418,33 @@
             </ul>
         </div>
 
-        <!-- DIAGRAMA DE MANTENIMIENTO - MEJOR CONTRASTE Y FUENTES MÁS GRANDES -->
+        <!-- DIAGRAMA DE MANTENIMIENTO MEJORADO: STATE DIAGRAM GRANDE + COLORES CORPORATIVOS -->
         <div class="card" id="mant">
             <h2>9. Plan de Mantenimiento y Ciclo de Vida</h2>
             <div class="diagram-box">
                 <div class="mermaid">
                     %%{init: {'theme':'base', 'themeVariables': {
-                      'primaryColor': '#0f3b5f',
-                      'primaryBorderColor': '#fbbf24',
-                      'primaryTextColor': '#ffffff',
-                      'lineColor': '#1e293b',
-                      'secondaryColor': '#38bdf8',
-                      'tertiaryColor': '#f0f9ff',
-                      'clusterBkg': '#f8fafc',
-                      'nodeBorder': '#0f172a',
-                      'nodeTextColor': '#0f172a',
-                      'fontSize': '17px',
-                      'fontFamily': 'Inter, Segoe UI, sans-serif'
+                      'primaryColor': '#0f3b5f','primaryBorderColor': '#fbbf24',
+                      'lineColor':'#2c3e66','secondaryColor':'#38bdf8','tertiaryColor':'#f8fafc'
                     }}}%%
                     stateDiagram-v2
-                        [*] --> Desarrollo_Iterativo : DEFINICIÓN REQUERIMIENTOS
-                        Desarrollo_Iterativo --> Pruebas_QA : COMMIT & CI/CD
-                        Pruebas_QA --> Entorno_Staging : VALIDACIÓN PIPELINE
-                        Entorno_Staging --> Producción : APROBACIÓN CALIDAD
-                        Producción --> Monitoreo_Activo : EJECUCIÓN DIARIA
-                        Monitoreo_Activo --> Mantenimiento_Correctivo : FALLO / API CHANGE
-                        Mantenimiento_Correctivo --> Desarrollo_Iterativo : HOTFIX
-                        Monitoreo_Activo --> Mantenimiento_Evolutivo : MEJORAS NLP / FEATURES
-                        Mantenimiento_Evolutivo --> Desarrollo_Iterativo : SPRINT EVOLUTIVO
-                        Monitoreo_Activo --> Mantenimiento_Preventivo : BACKUP / LIMPIEZA BD
-                        Mantenimiento_Preventivo --> Producción : TAREAS PROGRAMADAS
+                        [*] --> Desarrollo_Iterativo : Definición de requerimientos
+                        Desarrollo_Iterativo --> Pruebas_QA : Commit & Integración continua
+                        Pruebas_QA --> Entorno_Staging : Validación de pipeline completo
+                        Entorno_Staging --> Producción : Aprobación de calidad
+                        Producción --> Monitoreo_Activo : Ejecución diaria automática
+                        Monitoreo_Activo --> Mantenimiento_Correctivo : Fallo / API change
+                        Mantenimiento_Correctivo --> Desarrollo_Iterativo : Fix hotfix
+                        Monitoreo_Activo --> Mantenimiento_Evolutivo : Mejoras de NLP / nuevas features
+                        Mantenimiento_Evolutivo --> Desarrollo_Iterativo : Sprint evolutivo
+                        Monitoreo_Activo --> Mantenimiento_Preventivo : Backup / limpieza BD
+                        Mantenimiento_Preventivo --> Producción : Tareas programadas
                         
-                        note right of Producción : AUDITORÍA MENSUAL<br/>ACTUALIZACIÓN DEPENDENCIAS
-                        note left of Mantenimiento_Evolutivo : NUEVOS MODELOS<br/>SENTIMIENTO (BERT)
-                        
-                        classDef dev fill:#1e40af,color:#fff,stroke:#fbbf24,stroke-width:2px
-                        classDef qa fill:#059669,color:#fff,stroke:#fbbf24,stroke-width:2px
-                        classDef prod fill:#7c3aed,color:#fff,stroke:#fbbf24,stroke-width:2px
-                        classDef maint fill:#ea580c,color:#fff,stroke:#fbbf24,stroke-width:2px
-                        class Desarrollo_Iterativo dev
-                        class Pruebas_QA,Entorno_Staging qa
-                        class Producción,Monitoreo_Activo prod
-                        class Mantenimiento_Correctivo,Mantenimiento_Evolutivo,Mantenimiento_Preventivo maint
+                        note right of Producción : Auditoría mensual de seguridad<br/>y actualización de dependencias
+                        note left of Mantenimiento_Evolutivo : Incorporación de nuevos modelos<br/>de sentimiento (BERT)
                 </div>
             </div>
-            <p style="margin-top: 0.5rem; font-style: italic; font-weight: 500;">El plan integra corrección proactiva, evolución continua y tareas preventivas para garantizar disponibilidad del 99%.</p>
+            <p style="margin-top: 0.5rem; font-style: italic;">El plan integra corrección proactiva, evolución continua y tareas preventivas para garantizar disponibilidad del 99%.</p>
             <ul style="margin-top: 1rem;">
                 <li><strong>Correctivo:</strong> SLA de respuesta < 4h ante fallos críticos (API changes).</li>
                 <li><strong>Evolutivo:</strong> Release trimestral con mejoras en el motor de análisis (multilenguaje).</li>
@@ -529,7 +462,7 @@
                     <tr><td>Data Engineer Senior</td><td>Implementación de extracción, optimización SQL, orquestación</td><td>$950</td></tr>
                     <tr><td>NLP Specialist / Data Scientist</td><td>Modelos de sentimiento, ajuste de polaridad, dashboards analíticos</td><td>$700</td></tr>
                     <tr><td>Especialista Legal & Compliance</td><td>Auditoría Ley 25.326, términos de uso, cláusulas de privacidad</td><td>$280</td></tr>
-                    <tr style="background:#fef3c7; font-weight:bold;"><td colspan="2">Total Inversión Inicial</td><td>$2,780 USD</td></tr>
+                    <tr><td><strong>Total Inversión Inicial</strong></td><td></td><td><strong>$2,780 USD</strong></td></tr>
                 </tbody>
             </table>
             <h3>📆 Costos Operativos Mensuales (OPEX)</h3>
@@ -540,7 +473,7 @@
                 <li>Backup externo + almacenamiento de dashboards históricos: <strong>$12 USD</strong></li>
                 <li><strong>Total OPEX mensual estimado: $316 USD</strong> (primer año con descuentos promocionales desde $280).</li>
             </ul>
-            <p style="margin-top: 1rem; background: #fefce8; padding: 0.75rem; border-radius: 16px; border-left: 5px solid #fbbf24;"><strong>Nota:</strong> Se recomienda reserva del 15% para contingencias por cambios en políticas de X o actualizaciones regulatorias.</p>
+            <p style="margin-top: 1rem; background: #fefce8; padding: 0.75rem; border-radius: 16px; border-left: 5px solid #fbbf24;"><strong>Nota financiera:</strong> Se recomienda reserva del 15% para contingencias por cambios en políticas de X o actualizaciones regulatorias.</p>
         </div>
 
         <div class="footer">
