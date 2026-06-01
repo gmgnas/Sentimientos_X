@@ -1,1 +1,1 @@
-const total = 136; const pos = 51; const neu = 46; const neg = 39; const temaActual = 'Tecka';
+const total = 112; const pos = 38; const neu = 42; const neg = 32; const temaActual = 'Tecka';
